@@ -1,0 +1,123 @@
+{
+  "created_at": "2026-07-29T06:32:32",
+  "monitor": {
+    "latest_actual_date": "2026-07-28",
+    "latest_evaluated_date": "2026-07-28",
+    "evaluated_dates": [
+      "2026-07-22",
+      "2026-07-23",
+      "2026-07-24",
+      "2026-07-27",
+      "2026-07-28"
+    ],
+    "overall_mape": 3.887039504652968,
+    "direction_accuracy": 0.3614457831325301,
+    "direction_samples": 83,
+    "per_index": {
+      "CCI4500": {
+        "n": 25,
+        "mape": 3.2625,
+        "direction_accuracy": 0.0,
+        "direction_n": 6
+      },
+      "CCI5000": {
+        "n": 25,
+        "mape": 3.538043478260869,
+        "direction_accuracy": 0.0,
+        "direction_n": 10
+      },
+      "CCI5500": {
+        "n": 25,
+        "mape": 3.458282950423216,
+        "direction_accuracy": 0.0,
+        "direction_n": 10
+      },
+      "CCI进口3800": {
+        "n": 25,
+        "mape": 4.4487698736910675,
+        "direction_accuracy": 0.7368421052631579,
+        "direction_n": 19
+      },
+      "CCI进口4700": {
+        "n": 25,
+        "mape": 3.258744607693936,
+        "direction_accuracy": 0.7368421052631579,
+        "direction_n": 19
+      },
+      "CCI进口5500": {
+        "n": 25,
+        "mape": 5.355896117848718,
+        "direction_accuracy": 0.10526315789473684,
+        "direction_n": 19
+      }
+    },
+    "per_horizon": {
+      "h1": {
+        "n": 30,
+        "mape": 1.6165611894885454,
+        "direction_accuracy": 0.3333333333333333,
+        "direction_n": 6
+      },
+      "h2": {
+        "n": 30,
+        "mape": 2.496391466145594,
+        "direction_accuracy": 0.25,
+        "direction_n": 16
+      },
+      "h3": {
+        "n": 30,
+        "mape": 3.804738677409515,
+        "direction_accuracy": 0.3888888888888889,
+        "direction_n": 18
+      },
+      "h4": {
+        "n": 30,
+        "mape": 5.2340740156454215,
+        "direction_accuracy": 0.45,
+        "direction_n": 20
+      },
+      "h5": {
+        "n": 30,
+        "mape": 6.283432174575765,
+        "direction_accuracy": 0.34782608695652173,
+        "direction_n": 23
+      }
+    },
+    "records": 150
+  },
+  "threshold_reasons": [
+    "overall MAPE 3.887% >= 3.000%",
+    "CCI进口5500 MAPE 5.356% >= 5.000%",
+    "direction accuracy 0.361 <= 0.550"
+  ],
+  "profile": "trend_recovery",
+  "profile_parameters": {
+    "TRAIN_EPOCHS": "12",
+    "PATIENCE": "5",
+    "LEARNING_RATE": "0.0007",
+    "USE_ACC_LOSS": "1",
+    "ACC_LOSS_WEIGHT": "0.30",
+    "USE_SHORT_TREND_LOSS": "1",
+    "SHORT_TREND_LOSS_WEIGHT": "0.80",
+    "SHORT_TREND_MONTH_WEIGHTS": "0.8,0.15,0.05",
+    "SYNC_LOSS_WEIGHT": "0.08"
+  },
+  "active_model_id": "Coal6_TimeMixerNoEasy_32_120_seq32_shortfirst",
+  "candidate_model_id": "Coal6_AutoCandidate_20260729_063015",
+  "baseline_metrics": {
+    "mape5": 1.5430234757987604,
+    "mape20": 3.1192041036057816,
+    "mape120": 8.675401640807927,
+    "slope20_direction": 0.5966464834653005,
+    "composite": 0.6514745668895685
+  },
+  "candidate_metrics": {
+    "mape5": 2.949464339356289,
+    "mape20": 4.006967724957155,
+    "mape120": 8.828401178129543,
+    "slope20_direction": 0.5808104331625524,
+    "composite": 0.9325021750691681
+  },
+  "promote": false,
+  "decision_reason": "candidate 5-day MAPE regressed by more than 5%"
+}

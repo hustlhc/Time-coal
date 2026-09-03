@@ -10,8 +10,8 @@ class FlattenHead(nn.Module):
     def __init__(self, n_vars, nf, target_window, head_dropout=0):
         super().__init__()
         self.n_vars = n_vars
-        self.flatten = nn.Flatten(start_dim=-2)
-        self.linear = nn.Linear(nf, target_window)
+        self.flatten = nn.Flatten(start_dim=-2) # x 注释为 [B, nvars, d_model, patch_num]。Flatten(start_dim=-2) 会把最后两个维度合并为一个 → [B, nvars, d_model * patch_num]
+        self.linear = nn.Linear(nf, target_window) # nn.Linear(nf, target_window) 在最后一维上作用，因此输出 [B, nvars, target_window]
         self.dropout = nn.Dropout(head_dropout)
 
     def forward(self, x):  # x: [bs x nvars x d_model x patch_num]
@@ -28,23 +28,32 @@ class EnEmbedding(nn.Module):
         self.patch_len = patch_len
 
         self.value_embedding = nn.Linear(patch_len, d_model, bias=False)
-        self.glb_token = nn.Parameter(torch.randn(1, n_vars, 1, d_model))
+        self.glb_token = nn.Parameter(torch.randn(1, n_vars, 1, d_model)) # torch.randn(...) 使用标准正态分布（均值为0，方差为1）来随机初始化这个全局令牌的值 【nn.Parameter 是 PyTorch 中的一个类，它将一个张量（Tensor）“包装”起来，并将其标记为模型的一个可学习参数 训练过程会自动更新这个张量的值（通过梯度下降），以最小化损失函数】
         self.position_embedding = PositionalEmbedding(d_model)
 
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         # do patching
+        print("x : ", x.shape)
         n_vars = x.shape[1]
+        print("n_vars : ", n_vars)
         glb = self.glb_token.repeat((x.shape[0], 1, 1, 1))
+        
 
         x = x.unfold(dimension=-1, size=self.patch_len, step=self.patch_len)
+        print("x:", x.shape)
         x = torch.reshape(x, (x.shape[0] * x.shape[1], x.shape[2], x.shape[3]))
+        print("x:", x.shape)
         # Input encoding
         x = self.value_embedding(x) + self.position_embedding(x)
+        print("x1:", x.shape)
         x = torch.reshape(x, (-1, n_vars, x.shape[-2], x.shape[-1]))
+        print("x2:", x.shape)
         x = torch.cat([x, glb], dim=2)
+        print("x3:", x.shape)
         x = torch.reshape(x, (x.shape[0] * x.shape[1], x.shape[2], x.shape[3]))
+        print("x4:", x.shape)
         return self.dropout(x), n_vars
 
 
@@ -164,10 +173,30 @@ class Model(nn.Module):
 
         _, _, N = x_enc.shape
 
+        q1 = x_enc[:, :, -1]
+        print("q1 : ", q1.shape)
+        q2 = q1.unsqueeze(-1)
+        print("q2 : ", q2.shape)
+        q3 = q2.permute(0, 2, 1)
+        print("q3 : ", q3.shape)
         en_embed, n_vars = self.en_embedding(x_enc[:, :, -1].unsqueeze(-1).permute(0, 2, 1))
-        ex_embed = self.ex_embedding(x_enc[:, :, :-1], x_mark_enc)
+        print("en_embed : ", en_embed.shape)
+        print("n_vars : ", n_vars)
 
+        r1 = x_enc[:, :, :-1]
+        print("r1 : ", r1.shape)
+        r2 = x_mark_enc
+        print("r2 : ", r2.shape)
+        ex_embed = self.ex_embedding(x_enc[:, :, :-1], x_mark_enc)  # 
+        print("ex_embed : ", ex_embed.shape)
+
+
+        print("encoder前：")
+        print("en_embed : ", en_embed.shape)
+        print("ex_embed : ", ex_embed.shape)
         enc_out = self.encoder(en_embed, ex_embed)
+        print("encoder后：")
+        print("enc_out : ", enc_out.shape)
         enc_out = torch.reshape(
             enc_out, (-1, n_vars, enc_out.shape[-2], enc_out.shape[-1]))
         # z: [bs x nvars x d_model x patch_num]

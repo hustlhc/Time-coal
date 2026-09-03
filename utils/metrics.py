@@ -23,8 +23,8 @@ def RMSE(pred, true):
     return np.sqrt(MSE(pred, true))
 
 
-def MAPE(pred, true):
-    return np.mean(np.abs((true - pred) / true))
+def MAPE(pred, true, days):
+     return np.mean(np.abs((true[:, :days] - pred[:, :days]) / true[:, :days])) * 100
 
 
 def MSPE(pred, true):
@@ -35,7 +35,8 @@ def metric(pred, true):
     mae = MAE(pred, true)
     mse = MSE(pred, true)
     rmse = RMSE(pred, true)
-    mape = MAPE(pred, true)
+    mape_5 = MAPE(pred, true,5)
+    mape_10 = MAPE(pred, true, 10)
     mspe = MSPE(pred, true)
 
-    return mae, mse, rmse, mape, mspe
+    return mae, mse, rmse, mape_5, mape_10, mspe

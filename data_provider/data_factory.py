@@ -1,5 +1,5 @@
 from data_provider.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_M4, PSMSegLoader, \
-    MSLSegLoader, SMAPSegLoader, SMDSegLoader, SWATSegLoader, UEAloader
+    MSLSegLoader, SMAPSegLoader, SMDSegLoader, SWATSegLoader, UEAloader, UEACoalloader
 from data_provider.uea import collate_fn
 from torch.utils.data import DataLoader
 
@@ -15,7 +15,9 @@ data_dict = {
     'SMAP': SMAPSegLoader,
     'SMD': SMDSegLoader,
     'SWAT': SWATSegLoader,
-    'UEA': UEAloader
+    'UEA': UEAloader,
+    'coal': Dataset_Custom,
+    'UEAcoal': UEACoalloader
 }
 
 
@@ -24,6 +26,7 @@ def data_provider(args, flag):
     timeenc = 0 if args.embed != 'timeF' else 1
 
     shuffle_flag = False if (flag == 'test' or flag == 'TEST') else True
+    #shuffle_flag = False if (flag == 'test' or flag == 'val') else True
     drop_last = False
     batch_size = args.batch_size
     freq = args.freq
@@ -37,6 +40,8 @@ def data_provider(args, flag):
             flag=flag,
         )
         print(flag, len(data_set))
+        if len(data_set) == 0:
+            shuffle_flag = False
         data_loader = DataLoader(
             data_set,
             batch_size=batch_size,
@@ -69,7 +74,17 @@ def data_provider(args, flag):
             root_path=args.root_path,
             data_path=args.data_path,
             flag=flag,
-            size=[args.seq_len, args.label_len, args.pred_len],
+            size=[
+                args.seq_len,
+                args.label_len,
+                (
+                    args.eval_pred_len
+                    if flag in ['val', 'test']
+                    and getattr(args, 'eval_pred_len', 0)
+                    and args.eval_pred_len < args.pred_len
+                    else args.pred_len
+                ),
+            ],
             features=args.features,
             target=args.target,
             timeenc=timeenc,
@@ -77,6 +92,8 @@ def data_provider(args, flag):
             seasonal_patterns=args.seasonal_patterns
         )
         print(flag, len(data_set))
+        if len(data_set) == 0:
+            shuffle_flag = False
         data_loader = DataLoader(
             data_set,
             batch_size=batch_size,

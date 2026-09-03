@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华电集团电煤采需系统 - 主界面</title>
+    <!-- ECharts -->
+    <script src="echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #0a0e17;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* 网格背景 */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(26, 102, 219, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 102, 219, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 50px 50px;
+            }
+        }
+        
+        /* 渐变叠加层 */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 14, 23, 0.8) 0%, rgba(26, 102, 219, 0.2) 50%, rgba(10, 14, 23, 0.8) 100%);
+            z-index: -1;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navbar {
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(26, 102, 219, 0.3);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(26, 102, 219, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #1a66db 0%, #3b82f6 100%);
+        }
+        
+        .login-btn {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #1a66db 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 102, 219, 0.4);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            padding: 40px 30px;
+            min-height: calc(100vh - 80px);
+        }
+        
+        /* 标题区域 */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(26, 102, 219, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 图片展示区域样式 */
+        .image-section {
+            margin: 40px 0;
+            padding: 0 20px;
+        }
+        
+        .image-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+            background: rgba(10, 14, 23, 0.6);
+        }
+        
+        .dashboard-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-container:hover .dashboard-image {
+            transform: scale(1.02);
+        }
+        
+        /* 底部信息 */
+        .footer {
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(26, 102, 219, 0.3);
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 36px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .hero-title {
+                font-size: 28px;
+            }
+            
+            .prediction-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 网格背景 -->
+    <div class="grid-background"></div>
+    <div class="gradient-overlay"></div>
+    
+    <!-- 顶部导航栏 -->
+    <nav class="top-navbar">
+        <div class="logo">
+            <div class="logo-text">华电集团电煤采需系统</div>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">首页</a>
+            <a href="index.html#domestic-coal-page" class="nav-link">国内煤价</a>
+            <a href="index.html#international-coal-page" class="nav-link">国际煤价</a>
+            <a href="index.html#domestic-freight-page" class="nav-link">国内运费</a>
+            <a href="index.html#international-freight-page" class="nav-link">国际运费</a>
+            <a href="index.html#power-generation-page" class="nav-link">发电量预测</a>
+            <a href="index.html#decision-model-page" class="nav-link">采需决策</a>
+        </div>
+        <!-- <button class="login-btn">管理员登录</button> -->
+    </nav>
+    
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 标题区域 -->
+        <section class="hero-section">
+            <h1 class="hero-title">智能电煤采需分析系统</h1>
+            <p class="hero-subtitle">基于大数据和人工智能技术，为华电集团提供精准的煤价预测、运费分析和发电量预测，助力企业做出最优采需决策</p>
+        </section>
+        
+        <!-- 图片展示区域 -->
+        <section class="image-section">
+            <div class="image-container">
+                <img src="static/main.jpeg" alt="智能电煤采需系统" class="dashboard-image">
+            </div>
+        </section>
+    </main>
+    
+    <!-- 底部信息 -->
+    <footer class="footer">
+        <p class="footer-text">© 2026 华电集团电煤采需系统 | 技术支持：智能数据分析团队</p>
+    </footer>
+    
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('智能电煤采需系统主界面加载完成');
+        });
+    </script>
+</body>
+</html>

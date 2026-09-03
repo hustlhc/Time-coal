@@ -1,0 +1,695 @@
+{
+  "decision_date": "2026-05-14",
+  "is_emergency": true,
+  "duration_days": 90,
+  "total_purchase_quantity": 3100000.0,
+  "decision_analysis": "M1：\n### 采购策略分析报告\n\n#### 一、总体策略定调\n\n本次采购策略旨在通过合理的库存管理和价格策略，确保煤炭动态库存的安全性和高效性，同时合理控制整体采购节奏，以实现电厂的经济运行目标。我们将在满足年度需求的同时，尽量避免库存超限带来的风险，并通过灵活的采购机制来应对市场价格波动，确保电厂能够稳定运营。\n\n#### 二、物理库存现状与建仓意图\n\n**库存现状分析：**\n- **库存预警：** 预计库存将于未来30天内达到69,000吨，这表明当前库存水平已处于历史高位。\n- **库存缺口：** 目前库存缺口约为1,900吨，主要集中在北方港4500吨和5500吨，这些煤炭品质相对较高，但库存量较小。\n- **库存调整：** 在考虑了库存缺口后的实际库存情况，预计未来30天内库存将达到69,000吨左右。\n\n**建仓目的：**\n- **库存补充：** 对于北方港4500吨和5500吨，我们需要在短期内补充库存，以应对即将到来的高峰时段。\n- **价格保护：** 通过提前建仓锁定低价，我们可以降低未来的购入成本，从而提高经济效益。\n\n#### 三、市场价格演判与避险时机设计\n\n**未来90天各煤种最低价格预估：**\n- **煤炭价格：** 北方港4500吨至5500吨的煤炭价格分别为642元/吨、640元/吨，分别对应煤价642.00+运费52.86和640.00+运费52.86。\n- **运输费用：** 每吨煤的运费为52.86元。\n\n**价格走势判断：**\n- **看涨通道：** 当前煤炭价格处于看涨通道，随着煤炭供需关系的变化，煤炭价格可能会有所上升。\n- **看跌通道：** 如果煤炭价格继续下滑，可能意味着煤炭供给减少，或者市场需求下降，从而推升煤炭价格。\n\n**采购设计逻辑：**\n- **看跌通道：** 我们可以利用分批次或延后交单的操作来吃掉下方的红利，特别是在煤炭价格下行阶段，通过提前建仓锁定低价。\n- **看涨通道：** 系统将果断提前建仓锁定高价，以便在价格回升期间抓住有利时机买入。\n\n#### 四、90天进场节奏与采购明细（按月拆解）\n\n**首月明细：**\n- **采购日：2026年5月20日**\n  - **采购数量：** 18,000吨\n  - **采购金额：** 694,860元\n  - **采购日期：** 2026年5月20日\n\n**远期预案（后两月）：**\n- **采购日：2026年7月22日**\n  - **采购数量：** 17,000吨\n  - **采购金额：** 688,860元\n  - **采购日期：** 2026年7月22日\n\n**总结：**\n- **采购策略：** 本采购策略将通过合理的库存管理和价格策略，确保电厂全年的需求得到满足，同时最大限度地降低库存压力，提高采购效率。\n- **执行方式：** 本策略将遵循“近细远粗”的原则，逐步推进，确保采购过程的透明和可追溯性。\n\n---\n\n以上就是本次采购策略的详细分析报告。希望这份报告能帮助您更好地理解我们的采购策略，以及如何在保证煤炭动态库存安全的基础上，制定科学合理的采购计划。如有任何疑问或需要进一步讨论，请随时联系我。\n\nM2：\n### 采购策略评估报告\n\n#### 一、总体策略定调\n\n本次采购策略旨在通过合理安排采购节奏，确保煤炭动态库存的安全性，并最大化综合成本效益。我们坚持“库存安全、供需平衡、成本控制”三者并重的原则，力求在不牺牲整体经济效益的前提下，实现煤炭的有效供应。\n\n#### 二、物理库存现状与建仓意图\n\n**库存现状分析**\n\n1. **库存预警机制**\n   - 当前库存处于警戒线之上，预计短期内不会显著增长。这表明我们有足够的库存来应对可能的短期需求高峰。\n   - 我们已建立了一套严格的库存预警机制，一旦库存达到警戒点，我们会立即启动补库程序，确保库存充足。\n\n2. **建仓目的**\n   - 为了在有限的库存空间内获得最大的经济价值，我们将采取分批次建仓策略。这种做法有助于我们在市场价格波动期间锁定低价，同时避免不必要的库存积压。\n\n#### 三、市场价格演判与避险时机设计\n\n**未来90天各煤种最低价格预估**\n\n| 指标 | 最低价格预估 |\n|------|--------------|\n| 北方港4500 | 640.00 |\n| 北方港5500 | 855.00 |\n\n**价格走势分析**\n\n- **看涨通道**：考虑到煤炭市场的长期趋势，我们建议继续维持现有定价水平，但需注意价格波动带来的潜在风险。\n- **看跌通道**：如果煤炭价格在未来几个月内持续下跌，我们可能会考虑提前建仓锁定低价。然而，在这种情况下，我们也应该谨慎行事，避免过度冒险。\n\n#### 四、90天进场节奏与采购明细（按月拆解）\n\n**首月明细**\n\n| 预计采购日 | 采购吨数 | 计划交货日 |\n|-----------|----------|------------|\n| 2026/06/15 | 640,000 | 2026/06/24 |\n| 2026/06/24 | 240,000 | 2026/07/08 |\n| 2026/06/25 | 240,000 | 2026/07/20 |\n| 2026/07/08 | 240,000 | 2026/07/27 |\n\n**远期预案（后两月）**\n\n| 预计采购日 | 采购吨数 | 计划交货日 |\n|-----------|----------|------------|\n| 2026/07/29 | 240,000 | 2026/08/06 |\n\n**总结**\n\n通过上述策略，我们能够有效应对煤炭市场的不确定性，确保煤炭供应链的稳定运行。在未来的90天里，我们将继续密切关注市场价格变化，灵活调整采购计划，以适应市场波动带来的挑战。\n\nM3：\n### 采购策略概览\n\n#### 一、总体策略定调\n\n本次采购策略的核心目标在于确保煤炭动态库存的安全性，同时兼顾供需平衡，以实现高效、经济的物资调度。通过精准控制库存水平和价格走向，我们力求在有限的资源下最大化地发挥效益，确保电厂能够稳定、可靠地运行。\n\n#### 二、物理库存现状与建仓意图\n\n**库存现状分析：**\n- **库存告急：** 针对短期短缺，需迅速响应并及时补库，以维持稳定的库存水平。\n- **库存充裕：** 对于长期而言，建议建立较为均衡的库存体系，避免过度依赖单一供应商。\n\n**建仓意图：**\n- **看跌通道：** 在煤价持续上行的情况下，应积极寻找机会锁定低位，以获得更高的利润空间。\n- **看涨通道：** 如果预计煤价在未来一段时间内可能继续上升，可以考虑提前建仓锁定低价，从而降低未来的库存压力。\n\n#### 三、市场价格走势与避险时机设计\n\n**价格走势分析：**\n- **看跌通道：** 当煤价从高位快速回落时，应选择合理的时机提前建仓锁定低价，以保护库存不被大幅冲击。\n- **看涨通道：** 若预期煤价短期内有望反弹，可适时调整建仓策略，以获取更多的利润空间。\n\n**具体实施：**\n- **看跌阶段：** 在煤价达到一定支撑点后，逐步推进建仓，确保库存充足的同时，避免价格进一步下滑。\n- **看涨阶段：** 确保有足够的库存来应对潜在的上涨，同时预留一定的缓冲，以应对可能出现的更高价位。\n\n#### 四、90天进场节奏与采购明细\n\n**月度计划M3：**\n\n| 日期 | 订单数量 | 单位 | 采购金额（万元） |\n| --- | --- | --- | --- |\n| 2026/07/09 | 90000.00 | 吨 | 812.73 |\n| 2026/07/13 | 90000.00 | 吨 | 677.28 |\n| 2026/07/27 | 650000.00 | 吨 | 913.28 |\n| 2026/08/05 | 4500 | 吨 | 686.54 |\n| 2026/08/14 | 4500 | 吨 | 913.54 |\n| 2026/08/24 | 5500 | 吨 | 913.28 |\n| 2026/09/02 | 4500 | 吨 | 686.54 |\n\n**备注：**\n- 上述订单均为首批发货，后续批次将在下一月份陆续补充。\n\n**总结：**\n通过上述策略，我们将最大限度地利用库存优势，确保电厂平稳运行，并在合理范围内控制成本。请高层领导审阅此报告，以便做出明智决策。",
+  "months": [
+    {
+      "decision_date": "2026-05-14",
+      "is_emergency": false,
+      "duration_days": 30,
+      "total_purchase_quantity": 690000.0,
+      "decision_analysis": "### 采购策略分析报告\n\n#### 一、总体策略定调\n\n本次采购策略旨在通过合理的库存管理和价格策略，确保煤炭动态库存的安全性和高效性，同时合理控制整体采购节奏，以实现电厂的经济运行目标。我们将在满足年度需求的同时，尽量避免库存超限带来的风险，并通过灵活的采购机制来应对市场价格波动，确保电厂能够稳定运营。\n\n#### 二、物理库存现状与建仓意图\n\n**库存现状分析：**\n- **库存预警：** 预计库存将于未来30天内达到69,000吨，这表明当前库存水平已处于历史高位。\n- **库存缺口：** 目前库存缺口约为1,900吨，主要集中在北方港4500吨和5500吨，这些煤炭品质相对较高，但库存量较小。\n- **库存调整：** 在考虑了库存缺口后的实际库存情况，预计未来30天内库存将达到69,000吨左右。\n\n**建仓目的：**\n- **库存补充：** 对于北方港4500吨和5500吨，我们需要在短期内补充库存，以应对即将到来的高峰时段。\n- **价格保护：** 通过提前建仓锁定低价，我们可以降低未来的购入成本，从而提高经济效益。\n\n#### 三、市场价格演判与避险时机设计\n\n**未来90天各煤种最低价格预估：**\n- **煤炭价格：** 北方港4500吨至5500吨的煤炭价格分别为642元/吨、640元/吨，分别对应煤价642.00+运费52.86和640.00+运费52.86。\n- **运输费用：** 每吨煤的运费为52.86元。\n\n**价格走势判断：**\n- **看涨通道：** 当前煤炭价格处于看涨通道，随着煤炭供需关系的变化，煤炭价格可能会有所上升。\n- **看跌通道：** 如果煤炭价格继续下滑，可能意味着煤炭供给减少，或者市场需求下降，从而推升煤炭价格。\n\n**采购设计逻辑：**\n- **看跌通道：** 我们可以利用分批次或延后交单的操作来吃掉下方的红利，特别是在煤炭价格下行阶段，通过提前建仓锁定低价。\n- **看涨通道：** 系统将果断提前建仓锁定高价，以便在价格回升期间抓住有利时机买入。\n\n#### 四、90天进场节奏与采购明细（按月拆解）\n\n**首月明细：**\n- **采购日：2026年5月20日**\n  - **采购数量：** 18,000吨\n  - **采购金额：** 694,860元\n  - **采购日期：** 2026年5月20日\n\n**远期预案（后两月）：**\n- **采购日：2026年7月22日**\n  - **采购数量：** 17,000吨\n  - **采购金额：** 688,860元\n  - **采购日期：** 2026年7月22日\n\n**总结：**\n- **采购策略：** 本采购策略将通过合理的库存管理和价格策略，确保电厂全年的需求得到满足，同时最大限度地降低库存压力，提高采购效率。\n- **执行方式：** 本策略将遵循“近细远粗”的原则，逐步推进，确保采购过程的透明和可追溯性。\n\n---\n\n以上就是本次采购策略的详细分析报告。希望这份报告能帮助您更好地理解我们的采购策略，以及如何在保证煤炭动态库存安全的基础上，制定科学合理的采购计划。如有任何疑问或需要进一步讨论，请随时联系我。",
+      "procurement_plan": [
+        {
+          "date": "2026/05/20",
+          "total_quantity": 180000.0,
+          "items": [
+            {
+              "month_index": 1,
+              "cycle": 1,
+              "global_day_index": 4,
+              "coal_name": "北方港4500",
+              "quantity": 126000.0,
+              "price": 694.86,
+              "coal_price": 642.0,
+              "freight": 52.86,
+              "delivered_unit_cost": 694.86,
+              "latest_delivery_date": "2026/06/24"
+            },
+            {
+              "month_index": 1,
+              "cycle": 1,
+              "global_day_index": 4,
+              "coal_name": "北方港5500",
+              "quantity": 54000.0,
+              "price": 901.86,
+              "coal_price": 849.0,
+              "freight": 52.86,
+              "delivered_unit_cost": 901.86,
+              "latest_delivery_date": "2026/06/30"
+            }
+          ]
+        },
+        {
+          "date": "2026/05/25",
+          "total_quantity": 170000.0,
+          "items": [
+            {
+              "month_index": 1,
+              "cycle": 2,
+              "global_day_index": 7,
+              "coal_name": "北方港4500",
+              "quantity": 119000.0,
+              "price": 692.86,
+              "coal_price": 640.0,
+              "freight": 52.86,
+              "delivered_unit_cost": 692.86,
+              "latest_delivery_date": "2026/07/02"
+            },
+            {
+              "month_index": 1,
+              "cycle": 2,
+              "global_day_index": 7,
+              "coal_name": "北方港5500",
+              "quantity": 51000.0,
+              "price": 903.86,
+              "coal_price": 851.0,
+              "freight": 52.86,
+              "delivered_unit_cost": 903.86,
+              "latest_delivery_date": "2026/07/08"
+            }
+          ]
+        },
+        {
+          "date": "2026/06/01",
+          "total_quantity": 170000.0,
+          "items": [
+            {
+              "month_index": 1,
+              "cycle": 3,
+              "global_day_index": 12,
+              "coal_name": "北方港4500",
+              "quantity": 119000.0,
+              "price": 688.86,
+              "coal_price": 636.0,
+              "freight": 52.86,
+              "delivered_unit_cost": 688.86,
+              "latest_delivery_date": "2026/07/09"
+            },
+            {
+              "month_index": 1,
+              "cycle": 3,
+              "global_day_index": 12,
+              "coal_name": "北方港5500",
+              "quantity": 51000.0,
+              "price": 897.86,
+              "coal_price": 845.0,
+              "freight": 52.86,
+              "delivered_unit_cost": 897.86,
+              "latest_delivery_date": "2026/07/15"
+            }
+          ]
+        },
+        {
+          "date": "2026/06/04",
+          "total_quantity": 170000.0,
+          "items": [
+            {
+              "month_index": 1,
+              "cycle": 4,
+              "global_day_index": 15,
+              "coal_name": "北方港4500",
+              "quantity": 119000.0,
+              "price": 688.66,
+              "coal_price": 638.0,
+              "freight": 50.66,
+              "delivered_unit_cost": 688.66,
+              "latest_delivery_date": "2026/07/17"
+            },
+            {
+              "month_index": 1,
+              "cycle": 4,
+              "global_day_index": 15,
+              "coal_name": "北方港5500",
+              "quantity": 51000.0,
+              "price": 898.66,
+              "coal_price": 848.0,
+              "freight": 50.66,
+              "delivered_unit_cost": 898.66,
+              "latest_delivery_date": "2026/07/22"
+            }
+          ]
+        }
+      ],
+      "roll_forward": {
+        "month_index": 1,
+        "start_stock": 1100814.0,
+        "arrivals": 0,
+        "consumption": 960000.0,
+        "end_stock": 140814.0
+      }
+    },
+    {
+      "decision_date": "2026-06-11",
+      "is_emergency": true,
+      "duration_days": 30,
+      "total_purchase_quantity": 1360000.0,
+      "decision_analysis": "### 采购策略评估报告\n\n#### 一、总体策略定调\n\n本次采购策略旨在通过合理安排采购节奏，确保煤炭动态库存的安全性，并最大化综合成本效益。我们坚持“库存安全、供需平衡、成本控制”三者并重的原则，力求在不牺牲整体经济效益的前提下，实现煤炭的有效供应。\n\n#### 二、物理库存现状与建仓意图\n\n**库存现状分析**\n\n1. **库存预警机制**\n   - 当前库存处于警戒线之上，预计短期内不会显著增长。这表明我们有足够的库存来应对可能的短期需求高峰。\n   - 我们已建立了一套严格的库存预警机制，一旦库存达到警戒点，我们会立即启动补库程序，确保库存充足。\n\n2. **建仓目的**\n   - 为了在有限的库存空间内获得最大的经济价值，我们将采取分批次建仓策略。这种做法有助于我们在市场价格波动期间锁定低价，同时避免不必要的库存积压。\n\n#### 三、市场价格演判与避险时机设计\n\n**未来90天各煤种最低价格预估**\n\n| 指标 | 最低价格预估 |\n|------|--------------|\n| 北方港4500 | 640.00 |\n| 北方港5500 | 855.00 |\n\n**价格走势分析**\n\n- **看涨通道**：考虑到煤炭市场的长期趋势，我们建议继续维持现有定价水平，但需注意价格波动带来的潜在风险。\n- **看跌通道**：如果煤炭价格在未来几个月内持续下跌，我们可能会考虑提前建仓锁定低价。然而，在这种情况下，我们也应该谨慎行事，避免过度冒险。\n\n#### 四、90天进场节奏与采购明细（按月拆解）\n\n**首月明细**\n\n| 预计采购日 | 采购吨数 | 计划交货日 |\n|-----------|----------|------------|\n| 2026/06/15 | 640,000 | 2026/06/24 |\n| 2026/06/24 | 240,000 | 2026/07/08 |\n| 2026/06/25 | 240,000 | 2026/07/20 |\n| 2026/07/08 | 240,000 | 2026/07/27 |\n\n**远期预案（后两月）**\n\n| 预计采购日 | 采购吨数 | 计划交货日 |\n|-----------|----------|------------|\n| 2026/07/29 | 240,000 | 2026/08/06 |\n\n**总结**\n\n通过上述策略，我们能够有效应对煤炭市场的不确定性，确保煤炭供应链的稳定运行。在未来的90天里，我们将继续密切关注市场价格变化，灵活调整采购计划，以适应市场波动带来的挑战。",
+      "procurement_plan": [
+        {
+          "date": "2026/06/15",
+          "total_quantity": 640000.0,
+          "items": [
+            {
+              "month_index": 2,
+              "cycle": 1,
+              "global_day_index": 22,
+              "coal_name": "北方港4500",
+              "quantity": 448000.0,
+              "price": 684.8,
+              "coal_price": 640.0,
+              "freight": 44.8,
+              "delivered_unit_cost": 684.8,
+              "latest_delivery_date": "2026/06/24"
+            },
+            {
+              "month_index": 2,
+              "cycle": 1,
+              "global_day_index": 22,
+              "coal_name": "北方港5500",
+              "quantity": 192000.0,
+              "price": 899.8,
+              "coal_price": 855.0,
+              "freight": 44.8,
+              "delivered_unit_cost": 899.8,
+              "latest_delivery_date": "2026/06/30"
+            }
+          ]
+        },
+        {
+          "date": "2026/06/24",
+          "total_quantity": 240000.0,
+          "items": [
+            {
+              "month_index": 2,
+              "cycle": 2,
+              "global_day_index": 29,
+              "coal_name": "北方港4500",
+              "quantity": 168000.0,
+              "price": 684.64,
+              "coal_price": 645.0,
+              "freight": 39.64,
+              "delivered_unit_cost": 684.64,
+              "latest_delivery_date": "2026/07/08"
+            },
+            {
+              "month_index": 2,
+              "cycle": 2,
+              "global_day_index": 29,
+              "coal_name": "北方港5500",
+              "quantity": 72000.0,
+              "price": 906.64,
+              "coal_price": 867.0,
+              "freight": 39.64,
+              "delivered_unit_cost": 906.64,
+              "latest_delivery_date": "2026/07/16"
+            }
+          ]
+        },
+        {
+          "date": "2026/06/25",
+          "total_quantity": 240000.0,
+          "items": [
+            {
+              "month_index": 2,
+              "cycle": 3,
+              "global_day_index": 30,
+              "coal_name": "北方港4500",
+              "quantity": 168000.0,
+              "price": 683.72,
+              "coal_price": 644.0,
+              "freight": 39.72,
+              "delivered_unit_cost": 683.72,
+              "latest_delivery_date": "2026/07/20"
+            },
+            {
+              "month_index": 2,
+              "cycle": 3,
+              "global_day_index": 30,
+              "coal_name": "北方港5500",
+              "quantity": 72000.0,
+              "price": 911.72,
+              "coal_price": 872.0,
+              "freight": 39.72,
+              "delivered_unit_cost": 911.72,
+              "latest_delivery_date": "2026/07/27"
+            }
+          ]
+        },
+        {
+          "date": "2026/07/08",
+          "total_quantity": 240000.0,
+          "items": [
+            {
+              "month_index": 2,
+              "cycle": 4,
+              "global_day_index": 39,
+              "coal_name": "北方港4500",
+              "quantity": 168000.0,
+              "price": 676.69,
+              "coal_price": 640.0,
+              "freight": 36.69,
+              "delivered_unit_cost": 676.69,
+              "latest_delivery_date": "2026/07/29"
+            },
+            {
+              "month_index": 2,
+              "cycle": 4,
+              "global_day_index": 39,
+              "coal_name": "北方港5500",
+              "quantity": 72000.0,
+              "price": 900.69,
+              "coal_price": 864.0,
+              "freight": 36.69,
+              "delivered_unit_cost": 900.69,
+              "latest_delivery_date": "2026/08/06"
+            }
+          ]
+        }
+      ],
+      "roll_forward": {
+        "month_index": 2,
+        "start_stock": 140814.0,
+        "arrivals": 1277000.0,
+        "consumption": 960000.0,
+        "end_stock": 457814.0
+      }
+    },
+    {
+      "decision_date": "2026-07-09",
+      "is_emergency": true,
+      "duration_days": 30,
+      "total_purchase_quantity": 1050000.0,
+      "decision_analysis": "### 采购策略概览\n\n#### 一、总体策略定调\n\n本次采购策略的核心目标在于确保煤炭动态库存的安全性，同时兼顾供需平衡，以实现高效、经济的物资调度。通过精准控制库存水平和价格走向，我们力求在有限的资源下最大化地发挥效益，确保电厂能够稳定、可靠地运行。\n\n#### 二、物理库存现状与建仓意图\n\n**库存现状分析：**\n- **库存告急：** 针对短期短缺，需迅速响应并及时补库，以维持稳定的库存水平。\n- **库存充裕：** 对于长期而言，建议建立较为均衡的库存体系，避免过度依赖单一供应商。\n\n**建仓意图：**\n- **看跌通道：** 在煤价持续上行的情况下，应积极寻找机会锁定低位，以获得更高的利润空间。\n- **看涨通道：** 如果预计煤价在未来一段时间内可能继续上升，可以考虑提前建仓锁定低价，从而降低未来的库存压力。\n\n#### 三、市场价格走势与避险时机设计\n\n**价格走势分析：**\n- **看跌通道：** 当煤价从高位快速回落时，应选择合理的时机提前建仓锁定低价，以保护库存不被大幅冲击。\n- **看涨通道：** 若预期煤价短期内有望反弹，可适时调整建仓策略，以获取更多的利润空间。\n\n**具体实施：**\n- **看跌阶段：** 在煤价达到一定支撑点后，逐步推进建仓，确保库存充足的同时，避免价格进一步下滑。\n- **看涨阶段：** 确保有足够的库存来应对潜在的上涨，同时预留一定的缓冲，以应对可能出现的更高价位。\n\n#### 四、90天进场节奏与采购明细\n\n**月度计划M3：**\n\n| 日期 | 订单数量 | 单位 | 采购金额（万元） |\n| --- | --- | --- | --- |\n| 2026/07/09 | 90000.00 | 吨 | 812.73 |\n| 2026/07/13 | 90000.00 | 吨 | 677.28 |\n| 2026/07/27 | 650000.00 | 吨 | 913.28 |\n| 2026/08/05 | 4500 | 吨 | 686.54 |\n| 2026/08/14 | 4500 | 吨 | 913.54 |\n| 2026/08/24 | 5500 | 吨 | 913.28 |\n| 2026/09/02 | 4500 | 吨 | 686.54 |\n\n**备注：**\n- 上述订单均为首批发货，后续批次将在下一月份陆续补充。\n\n**总结：**\n通过上述策略，我们将最大限度地利用库存优势，确保电厂平稳运行，并在合理范围内控制成本。请高层领导审阅此报告，以便做出明智决策。",
+      "procurement_plan": [
+        {
+          "date": "2026/07/13",
+          "total_quantity": 90000.0,
+          "items": [
+            {
+              "month_index": 3,
+              "cycle": 1,
+              "global_day_index": 42,
+              "coal_name": "北方港5000",
+              "quantity": 90000.0,
+              "price": 812.73,
+              "coal_price": 777.0,
+              "freight": 35.73,
+              "delivered_unit_cost": 812.73,
+              "latest_delivery_date": "2026/07/22"
+            }
+          ]
+        },
+        {
+          "date": "2026/07/27",
+          "total_quantity": 650000.0,
+          "items": [
+            {
+              "month_index": 3,
+              "cycle": 3,
+              "global_day_index": 52,
+              "coal_name": "北方港4500",
+              "quantity": 455000.0,
+              "price": 677.28,
+              "coal_price": 638.0,
+              "freight": 39.28,
+              "delivered_unit_cost": 677.28,
+              "latest_delivery_date": "2026/08/05"
+            },
+            {
+              "month_index": 3,
+              "cycle": 3,
+              "global_day_index": 52,
+              "coal_name": "北方港5500",
+              "quantity": 195000.0,
+              "price": 913.28,
+              "coal_price": 874.0,
+              "freight": 39.28,
+              "delivered_unit_cost": 913.28,
+              "latest_delivery_date": "2026/08/14"
+            }
+          ]
+        },
+        {
+          "date": "2026/07/30",
+          "total_quantity": 310000.0,
+          "items": [
+            {
+              "month_index": 3,
+              "cycle": 4,
+              "global_day_index": 55,
+              "coal_name": "北方港4500",
+              "quantity": 217000.0,
+              "price": 686.54,
+              "coal_price": 646.0,
+              "freight": 40.54,
+              "delivered_unit_cost": 686.54,
+              "latest_delivery_date": "2026/08/24"
+            },
+            {
+              "month_index": 3,
+              "cycle": 4,
+              "global_day_index": 55,
+              "coal_name": "北方港5500",
+              "quantity": 93000.0,
+              "price": 913.54,
+              "coal_price": 873.0,
+              "freight": 40.54,
+              "delivered_unit_cost": 913.54,
+              "latest_delivery_date": "2026/09/02"
+            }
+          ]
+        }
+      ],
+      "roll_forward": {
+        "month_index": 3,
+        "start_stock": 457814.0,
+        "arrivals": 1437000.0,
+        "consumption": 960000.0,
+        "end_stock": 934814.0
+      }
+    }
+  ],
+  "procurement_plan": [
+    {
+      "date": "2026/05/20",
+      "total_quantity": 180000.0,
+      "items": [
+        {
+          "month_index": 1,
+          "cycle": 1,
+          "global_day_index": 4,
+          "coal_name": "北方港4500",
+          "quantity": 126000.0,
+          "price": 694.86,
+          "coal_price": 642.0,
+          "freight": 52.86,
+          "delivered_unit_cost": 694.86,
+          "latest_delivery_date": "2026/06/24"
+        },
+        {
+          "month_index": 1,
+          "cycle": 1,
+          "global_day_index": 4,
+          "coal_name": "北方港5500",
+          "quantity": 54000.0,
+          "price": 901.86,
+          "coal_price": 849.0,
+          "freight": 52.86,
+          "delivered_unit_cost": 901.86,
+          "latest_delivery_date": "2026/06/30"
+        }
+      ]
+    },
+    {
+      "date": "2026/05/25",
+      "total_quantity": 170000.0,
+      "items": [
+        {
+          "month_index": 1,
+          "cycle": 2,
+          "global_day_index": 7,
+          "coal_name": "北方港4500",
+          "quantity": 119000.0,
+          "price": 692.86,
+          "coal_price": 640.0,
+          "freight": 52.86,
+          "delivered_unit_cost": 692.86,
+          "latest_delivery_date": "2026/07/02"
+        },
+        {
+          "month_index": 1,
+          "cycle": 2,
+          "global_day_index": 7,
+          "coal_name": "北方港5500",
+          "quantity": 51000.0,
+          "price": 903.86,
+          "coal_price": 851.0,
+          "freight": 52.86,
+          "delivered_unit_cost": 903.86,
+          "latest_delivery_date": "2026/07/08"
+        }
+      ]
+    },
+    {
+      "date": "2026/06/01",
+      "total_quantity": 170000.0,
+      "items": [
+        {
+          "month_index": 1,
+          "cycle": 3,
+          "global_day_index": 12,
+          "coal_name": "北方港4500",
+          "quantity": 119000.0,
+          "price": 688.86,
+          "coal_price": 636.0,
+          "freight": 52.86,
+          "delivered_unit_cost": 688.86,
+          "latest_delivery_date": "2026/07/09"
+        },
+        {
+          "month_index": 1,
+          "cycle": 3,
+          "global_day_index": 12,
+          "coal_name": "北方港5500",
+          "quantity": 51000.0,
+          "price": 897.86,
+          "coal_price": 845.0,
+          "freight": 52.86,
+          "delivered_unit_cost": 897.86,
+          "latest_delivery_date": "2026/07/15"
+        }
+      ]
+    },
+    {
+      "date": "2026/06/04",
+      "total_quantity": 170000.0,
+      "items": [
+        {
+          "month_index": 1,
+          "cycle": 4,
+          "global_day_index": 15,
+          "coal_name": "北方港4500",
+          "quantity": 119000.0,
+          "price": 688.66,
+          "coal_price": 638.0,
+          "freight": 50.66,
+          "delivered_unit_cost": 688.66,
+          "latest_delivery_date": "2026/07/17"
+        },
+        {
+          "month_index": 1,
+          "cycle": 4,
+          "global_day_index": 15,
+          "coal_name": "北方港5500",
+          "quantity": 51000.0,
+          "price": 898.66,
+          "coal_price": 848.0,
+          "freight": 50.66,
+          "delivered_unit_cost": 898.66,
+          "latest_delivery_date": "2026/07/22"
+        }
+      ]
+    },
+    {
+      "date": "2026/06/15",
+      "total_quantity": 640000.0,
+      "items": [
+        {
+          "month_index": 2,
+          "cycle": 1,
+          "global_day_index": 22,
+          "coal_name": "北方港4500",
+          "quantity": 448000.0,
+          "price": 684.8,
+          "coal_price": 640.0,
+          "freight": 44.8,
+          "delivered_unit_cost": 684.8,
+          "latest_delivery_date": "2026/06/24"
+        },
+        {
+          "month_index": 2,
+          "cycle": 1,
+          "global_day_index": 22,
+          "coal_name": "北方港5500",
+          "quantity": 192000.0,
+          "price": 899.8,
+          "coal_price": 855.0,
+          "freight": 44.8,
+          "delivered_unit_cost": 899.8,
+          "latest_delivery_date": "2026/06/30"
+        }
+      ]
+    },
+    {
+      "date": "2026/06/24",
+      "total_quantity": 240000.0,
+      "items": [
+        {
+          "month_index": 2,
+          "cycle": 2,
+          "global_day_index": 29,
+          "coal_name": "北方港4500",
+          "quantity": 168000.0,
+          "price": 684.64,
+          "coal_price": 645.0,
+          "freight": 39.64,
+          "delivered_unit_cost": 684.64,
+          "latest_delivery_date": "2026/07/08"
+        },
+        {
+          "month_index": 2,
+          "cycle": 2,
+          "global_day_index": 29,
+          "coal_name": "北方港5500",
+          "quantity": 72000.0,
+          "price": 906.64,
+          "coal_price": 867.0,
+          "freight": 39.64,
+          "delivered_unit_cost": 906.64,
+          "latest_delivery_date": "2026/07/16"
+        }
+      ]
+    },
+    {
+      "date": "2026/06/25",
+      "total_quantity": 240000.0,
+      "items": [
+        {
+          "month_index": 2,
+          "cycle": 3,
+          "global_day_index": 30,
+          "coal_name": "北方港4500",
+          "quantity": 168000.0,
+          "price": 683.72,
+          "coal_price": 644.0,
+          "freight": 39.72,
+          "delivered_unit_cost": 683.72,
+          "latest_delivery_date": "2026/07/20"
+        },
+        {
+          "month_index": 2,
+          "cycle": 3,
+          "global_day_index": 30,
+          "coal_name": "北方港5500",
+          "quantity": 72000.0,
+          "price": 911.72,
+          "coal_price": 872.0,
+          "freight": 39.72,
+          "delivered_unit_cost": 911.72,
+          "latest_delivery_date": "2026/07/27"
+        }
+      ]
+    },
+    {
+      "date": "2026/07/08",
+      "total_quantity": 240000.0,
+      "items": [
+        {
+          "month_index": 2,
+          "cycle": 4,
+          "global_day_index": 39,
+          "coal_name": "北方港4500",
+          "quantity": 168000.0,
+          "price": 676.69,
+          "coal_price": 640.0,
+          "freight": 36.69,
+          "delivered_unit_cost": 676.69,
+          "latest_delivery_date": "2026/07/29"
+        },
+        {
+          "month_index": 2,
+          "cycle": 4,
+          "global_day_index": 39,
+          "coal_name": "北方港5500",
+          "quantity": 72000.0,
+          "price": 900.69,
+          "coal_price": 864.0,
+          "freight": 36.69,
+          "delivered_unit_cost": 900.69,
+          "latest_delivery_date": "2026/08/06"
+        }
+      ]
+    },
+    {
+      "date": "2026/07/13",
+      "total_quantity": 90000.0,
+      "items": [
+        {
+          "month_index": 3,
+          "cycle": 1,
+          "global_day_index": 42,
+          "coal_name": "北方港5000",
+          "quantity": 90000.0,
+          "price": 812.73,
+          "coal_price": 777.0,
+          "freight": 35.73,
+          "delivered_unit_cost": 812.73,
+          "latest_delivery_date": "2026/07/22"
+        }
+      ]
+    },
+    {
+      "date": "2026/07/27",
+      "total_quantity": 650000.0,
+      "items": [
+        {
+          "month_index": 3,
+          "cycle": 3,
+          "global_day_index": 52,
+          "coal_name": "北方港4500",
+          "quantity": 455000.0,
+          "price": 677.28,
+          "coal_price": 638.0,
+          "freight": 39.28,
+          "delivered_unit_cost": 677.28,
+          "latest_delivery_date": "2026/08/05"
+        },
+        {
+          "month_index": 3,
+          "cycle": 3,
+          "global_day_index": 52,
+          "coal_name": "北方港5500",
+          "quantity": 195000.0,
+          "price": 913.28,
+          "coal_price": 874.0,
+          "freight": 39.28,
+          "delivered_unit_cost": 913.28,
+          "latest_delivery_date": "2026/08/14"
+        }
+      ]
+    },
+    {
+      "date": "2026/07/30",
+      "total_quantity": 310000.0,
+      "items": [
+        {
+          "month_index": 3,
+          "cycle": 4,
+          "global_day_index": 55,
+          "coal_name": "北方港4500",
+          "quantity": 217000.0,
+          "price": 686.54,
+          "coal_price": 646.0,
+          "freight": 40.54,
+          "delivered_unit_cost": 686.54,
+          "latest_delivery_date": "2026/08/24"
+        },
+        {
+          "month_index": 3,
+          "cycle": 4,
+          "global_day_index": 55,
+          "coal_name": "北方港5500",
+          "quantity": 93000.0,
+          "price": 913.54,
+          "coal_price": 873.0,
+          "freight": 40.54,
+          "delivered_unit_cost": 913.54,
+          "latest_delivery_date": "2026/09/02"
+        }
+      ]
+    }
+  ]
+}

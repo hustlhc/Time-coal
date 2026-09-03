@@ -1,0 +1,11 @@
+# Core dependencies for this repo
+transformers>=4.35.0
+safetensors
+accelerate
+sentencepiece
+# Optional: tokenizers (only if needed by tokenizer loading)
+tokenizers
+# Optimization solver used by blending/LP routines
+pulp
+# Note: Do NOT pin `torch` here because PyTorch wheels differ by CUDA.
+# Use the setup_env.sh script to install the appropriate torch wheel for your system.

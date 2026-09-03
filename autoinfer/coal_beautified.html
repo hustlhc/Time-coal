@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华电集团电煤采需系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf1 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .app-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .ui-floor {
+            background: white;
+            box-shadow: 0 10px 30px rgba(26, 86, 219, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e8f0fe;
+        }
+        
+        .floor-content {
+            padding: 30px;
+        }
+        
+        .foor-content-title {
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a56db, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 15px 0;
+            border-bottom: 3px solid #1a56db;
+        }
+        
+        .foor-content-table {
+            margin-top: 20px;
+        }
+        
+        .controls {
+            display: flex;
+        }
+        
+        /* 左侧按钮选择 */
+        .button-group-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .main-button {
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .main-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .main-button:hover::before {
+            left: 100%;
+        }
+        
+        .main-button.active {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+            box-shadow: 0 6px 20px rgba(26, 86, 219, 0.4);
+        }
+        
+        .main-button.active::before {
+            display: none;
+        }
+        
+        /* 右侧页面内容区域 */
+        .page-content {
+            min-height: 600px;
+        }
+        
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 24px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a56db, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 12px 0;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        
+        .page-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+            border-radius: 10px;
+            border: 1px solid #e0e7ff;
+            box-shadow: 0 2px 8px rgba(26, 86, 219, 0.1);
+        }
+        
+        /* 数据概览卡片 */
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        
+        .overview-card {
+            padding: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+            border-left: 4px solid #1a56db;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #1a56db, #3498db, #1a56db);
+            animation: gradientFlow 3s ease infinite;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.25);
+        }
+        
+        .overview-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 12px;
+        }
+        
+        .overview-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a56db, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .overview-card .unit {
+            font-size: 14px;
+            color: #6b7280;
+            margin-left: 8px;
+        }
+        
+        /* 数据表格 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+            font-weight: 700;
+            color: #1a56db;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table tr:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+        }
+        
+        /* 趋势分析 */
+        .trend-analysis {
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.1);
+            border: 1px solid #e0e7ff;
+        }
+        
+        .trend-analysis p {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        /* 数据来源 */
+        .data-source {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e7ff;
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+        }
+        
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+        
+        .action-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .action-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .action-button:hover::before {
+            left: 100%;
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+        }
+        
+        .action-button.primary:hover {
+            background: linear-gradient(135deg, #1548b3 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 16px rgba(26, 86, 219, 0.4);
+        }
+        
+        .date-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .date-control label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .time-range-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .time-range-control label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .date-picker {
+            padding: 10px 16px;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .date-picker:focus {
+            outline: none;
+            border-color: #1a56db;
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .range-button {
+            padding: 8px 18px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .range-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .range-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .range-button:hover::before {
+            left: 100%;
+        }
+        
+        .range-button.active {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.4);
+        }
+        
+        /* 煤种选择器 */
+        .coal-type-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .coal-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coal-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .coal-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .coal-button:hover::before {
+            left: 100%;
+        }
+        
+        .coal-button.active {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.4);
+        }
+        
+        /* 图表容器 */
+        .mw-all {
+            width: 100%;
+        }
+        
+        .mh-580 {
+            height: 580px;
+        }
+        
+        .mt-10 {
+            margin-top: 10px;
+        }
+        
+        /* 图表容器美化 */
+        .chart-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+            border: 1px solid #e0e7ff;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .button-group-vertical {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .page-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .time-range-control {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+</head>
+<body>
+    <div class="app-content">
+        <div class="ui-floor ui-f_h mt-40" id="floor1">
+            <div class="ui-floor-nav clear">
+                <div class="floor-content">
+                    <div class="foor-content-title">
+                        <div class="float-left">
+                            <h1 id="title" class="title">华电集团电煤采需系统</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="foor-content-table">
+                        <div class="controls" style="display: flex;">
+                            <!-- 左侧按钮选择 -->
+                            <div style="flex: 0 0 250px; margin-right: 20px;">
+                                <div class="button-group-vertical">
+                                    <button class="main-button" onclick="window.location.href='main_dashboard.html'" style="background: linear-gradient(135deg, #1a56db 0%, #3498db 100%); color: white;">
+                                        <i class="fa fa-home"></i> 返回主界面
+                                    </button>
+                                    <button class="main-button" data-page="domestic-coal">国内煤价</button>
+                                    <button class="main-button" data-page="international-coal">国际煤价</button>
+                                    <button class="main-button" data-page="domestic-freight">国内运费</button>
+                                    <button class="main-button" data-page="international-freight">国际运费</button>
+                                    <button class="main-button" data-page="power-generation">发电量预测</button>
+                                    <button class="main-button" data-page="decision-model">采需决策</button>
+                                </div>
+                            </div>
+
+                            <!-- 右侧页面内容区域 -->
+                            <div style="flex: 1;">
+                                <!-- 国内煤价页面 -->
+                                <div class="page-content" id="domestic-coal-page">
+                                    <h2>国内煤价预测</h2>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-domestic-coal">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-domestic-coal" placeholder="年-月-日">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label>时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="domestic-coal">5天</button>
+                                            <button class="range-button" data-days="10" data-page="domestic-coal">10天</button>
+                                            <button class="range-button" data-days="20" data-page="domestic-coal">20天</button>
+                                            <button class="range-button" data-days="60" data-page="domestic-coal">60天</button>
+                                        </div>
+                                    </div>
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="CCI4500infer" data-page="domestic-coal">CCI4500</button>
+                                        <button class="coal-button" data-type="CCI5000infer" data-page="domestic-coal">CCI5000</button>
+                                        <button class="coal-button" data-type="CCI5500infer" data-page="domestic-coal">CCI5500</button>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-domestic-coal" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 国际煤价页面 -->
+                                <div class="page-content" id="international-coal-page" style="display: none;">
+                                    <h2>国际煤价预测</h2>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-international-coal">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-international-coal" placeholder="年-月-日">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label>时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="international-coal">5天</button>
+                                            <button class="range-button" data-days="10" data-page="international-coal">10天</button>
+                                            <button class="range-button" data-days="20" data-page="international-coal">20天</button>
+                                            <button class="range-button" data-days="60" data-page="international-coal">60天</button>
+                                        </div>
+                                    </div>
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="CCI3800outinfer" data-page="international-coal">进口CCI3800</button>
+                                        <button class="coal-button" data-type="CCI4700outinfer" data-page="international-coal">进口CCI4700</button>
+                                        <button class="coal-button" data-type="CCI5500outinfer" data-page="international-coal">进口CCI5500</button>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-international-coal" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 国内运费页面 -->
+                                <div class="page-content" id="domestic-freight-page" style="display: none;">
+                                    <h2>国内运费预测</h2>
+                                    <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">航线：秦皇岛-厦门</p>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-domestic-freight">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-domestic-freight" placeholder="年-月-日">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label>时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="domestic-freight">5天</button>
+                                            <button class="range-button" data-days="10" data-page="domestic-freight">10天</button>
+                                            <button class="range-button" data-days="20" data-page="domestic-freight">20天</button>
+                                            <button class="range-button" data-days="60" data-page="domestic-freight">60天</button>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-domestic-freight" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 国际运费页面 -->
+                                <div class="page-content" id="international-freight-page" style="display: none;">
+                                    <h2>国际运费预测</h2>
+                                    <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">航线：印尼萨马林达-中国广州</p>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-international-freight">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-international-freight" placeholder="年-月-日">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label>时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="international-freight">5天</button>
+                                            <button class="range-button" data-days="10" data-page="international-freight">10天</button>
+                                            <button class="range-button" data-days="20" data-page="international-freight">20天</button>
+                                            <button class="range-button" data-days="60" data-page="international-freight">60天</button>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-international-freight" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 发电量预测页面 -->
+                                <div class="page-content" id="power-generation-page" style="display: none;">
+                                    <h2>发电量预测</h2>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-power-generation">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-power-generation" placeholder="年-月-日">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label>时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="power-generation">5天</button>
+                                            <button class="range-button" data-days="10" data-page="power-generation">10天</button>
+                                            <button class="range-button" data-days="20" data-page="power-generation">20天</button>
+                                            <button class="range-button" data-days="60" data-page="power-generation">60天</button>
+                                        </div>
+                                    </div>
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="kemeng" data-page="power-generation">可门电厂</button>
+                                        <button class="coal-button" data-type="shaowu" data-page="power-generation">邵武电厂</button>
+                                        <button class="coal-button" data-type="yongan" data-page="power-generation">永安电厂</button>
+                                        <button class="coal-button" data-type="zhangping" data-page="power-generation">漳平电厂</button>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-power-generation" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 采需决策页面 -->
+                                <div class="page-content" id="decision-model-page" style="display: none;">
+                                    <h2 style="font-size: 32px; font-weight: bold; color: #2c3e50; margin-bottom: 30px;">采需决策</h2>
+                                        
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="kemeng" data-page="decision-model">可门电厂</button>
+                                        <button class="coal-button" data-type="shaowu" data-page="decision-model">邵武电厂</button>
+                                        <button class="coal-button" data-type="yongan" data-page="decision-model">永安电厂</button>
+                                        <button class="coal-button" data-type="zhangping" data-page="decision-model">漳平电厂</button>
+                                    </div>
+                                    
+                                    <!-- 推荐采购数量柱状图 -->
+                                    <div class="ui-floor" style="margin-bottom: 20px; padding: 20px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <h3 style="font-size: 20px; font-weight: bold; color: #2c3e50;">推荐采购数量</h3>
+                                            <div style="font-size: 16px; font-weight: bold; color: #2c3e50; padding: 8px 16px; background-color: #f8f9fa; border-radius: 4px;">
+                                                推荐采购时间：<span id="recommended-time">2026-01-26</span>
+                                            </div>
+                                        </div>
+                                        <div class="chart-container">
+                                            <div id="chart-decision-model" class="mw-all mh-580 mt-10"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 当天预估价格 -->
+                                    <div class="ui-floor" style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; margin-top: 20px;">
+                                        <h3 style="font-size: 20px; font-weight: bold; color: #2c3e50; margin-bottom: 20px;">当天预估价格</h3>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
+                                            <div style="padding: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: calc(33.333% - 10px); text-align: center; border: 1px solid #e0e7ff;">
+                                                <strong style="display: block; margin-bottom: 8px; color: #4b5563;">CCI4500</strong>
+                                                <span style="font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #1a56db, #3498db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">450</span> <span style="color: #6b7280;">元/吨</span>
+                                            </div>
+                                            <div style="padding: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: calc(33.333% - 10px); text-align: center; border: 1px solid #e0e7ff;">
+                                                <strong style="display: block; margin-bottom: 8px; color: #4b5563;">CCI5000</strong>
+                                                <span style="font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #1a56db, #3498db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">520</span> <span style="color: #6b7280;">元/吨</span>
+                                            </div>
+                                            <div style="padding: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: calc(33.333% - 10px); text-align: center; border: 1px solid #e0e7ff;">
+                                                <strong style="display: block; margin-bottom: 8px; color: #4b5563;">CCI5500</strong>
+                                                <span style="font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #1a56db, #3498db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">580</span> <span style="color: #6b7280;">元/吨</span>
+                                            </div>
+                                            <div style="padding: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: calc(33.333% - 10px); text-align: center; border: 1px solid #e0e7ff;">
+                                                <strong style="display: block; margin-bottom: 8px; color: #4b5563;">进口CCI3800</strong>
+                                                <span style="font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #1a56db, #3498db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">380.40</span> <span style="color: #6b7280;">元/吨</span>
+                                            </div>
+                                            <div style="padding: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: calc(33.333% - 10px); text-align: center; border: 1px solid #e0e7ff;">
+                                                <strong style="display: block; margin-bottom: 8px; color: #4b5563;">进口CCI4700</strong>
+                                                <span style="font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #1a56db, #3498db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">470.60</span> <span style="color: #6b7280;">元/吨</span>
+                                            </div>
+                                            <div style="padding: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: calc(33.333% - 10px); text-align: center; border: 1px solid #e0e7ff;">
+                                                <strong style="display: block; margin-bottom: 8px; color: #4b5563;">进口CCI5500</strong>
+                                                <span style="font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #1a56db, #3498db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">550.80</span> <span style="color: #6b7280;">元/吨</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 决策文字输出 -->
+                                    <div class="ui-floor" style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; margin-top: 20px;">
+                                        <h3 style="font-size: 20px; font-weight: bold; color: #2c3e50; margin-bottom: 20px;">决策分析</h3>
+                                        <div id="decision-text" style="font-size: 14px; line-height: 1.6; color: #333;">
+                                            <!-- 决策文字将在这里动态生成 -->
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var nowDate;
+        var currentType = 'CCI4500infer'; // 默认类型
+        var currentDays = 5; // 默认显示5天
+        
+        // 模拟用户登录状态
+        var user = 'test_user';
+        var isPredictionVIP = true;
+        
+        // 页面切换逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            nowDate = new Date().format('Y-m-d');
+            
+            // 初始化日期选择器
+            $('.date-picker').datepicker({
+                language: 'zh-CN',
+                autoclose: true,
+                clearBtn: true,
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                endDate: nowDate
+            }).on('changeDate', function(e) {
+                // 当使用日期选择器选择日期时触发数据更新
+                checkTime();
+            });
+            
+            // 为所有日期选择器设置默认值
+            document.querySelectorAll('.date-picker').forEach(picker => {
+                picker.value = nowDate;
+            });
+            
+            // 获取所有主按钮和煤种按钮
+            const mainButtons = document.querySelectorAll('.main-button');
+            const coalButtons = document.querySelectorAll('.coal-button');
+            const rangeButtons = document.querySelectorAll('.range-button');
+            
+            // 为主要按钮添加点击事件
+            mainButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                    
+                    // 更新按钮状态
+                    mainButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 检查URL锚点并显示对应的页面
+            function checkHash() {
+                const hash = window.location.hash;
+                if (hash) {
+                    // 从锚点中提取页面ID
+                    const pageId = hash.replace('#', '').replace('-page', '');
+                    if (pageId) {
+                        showPage(pageId);
+                        
+                        // 激活对应的主按钮
+                        mainButtons.forEach(btn => {
+                            if (btn.getAttribute('data-page') === pageId) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+                        return;
+                    }
+                }
+                
+                // 默认显示第一个页面
+                showPage('domestic-coal');
+                mainButtons.forEach((btn, index) => {
+                    if (index === 1) { // 国内煤价按钮
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 页面加载时检查锚点
+            checkHash();
+            
+            // 为煤种按钮添加点击事件
+            coalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (!user || user == 'null' || !isPredictionVIP) {
+                        alert('请登录后查看数据');
+                        return;
+                    } else {
+                        const pageId = this.getAttribute('data-page');
+                        const type = this.getAttribute('data-type');
+                        
+                        // 更新按钮状态
+                        const samePageButtons = document.querySelectorAll(`.coal-button[data-page="${pageId}"]`);
+                        samePageButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        currentType = type;
+                        
+                        // 重新加载图表
+                        loadChart(pageId, type, currentDays);
+                    }
+                });
+            });
+            
+            // 为时间范围按钮添加点击事件
+            rangeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pageId = this.getAttribute('data-page');
+                    const days = parseInt(this.getAttribute('data-days'));
+                    
+                    // 更新按钮状态
+                    const samePageButtons = document.querySelectorAll(`.range-button[data-page="${pageId}"]`);
+                    samePageButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentDays = days;
+                    
+                    // 重新加载图表
+                    loadChart(pageId, null, days);
+                });
+            });
+            
+            // 监听哈希变化事件
+            window.addEventListener('hashchange', checkHash);
+        });
+        
+        // 显示指定页面
+        function showPage(pageId) {
+            // 隐藏所有页面
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // 显示选中的页面
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                
+                // 激活对应页面的第一个煤种按钮和时间范围按钮
+                const firstCoalButton = targetPage.querySelector('.coal-button');
+                if (firstCoalButton) {
+                    const samePageButtons = targetPage.querySelectorAll('.coal-button');
+                    samePageButtons.forEach(btn => btn.classList.remove('active'));
+                    firstCoalButton.classList.add('active');
+                    currentType = firstCoalButton.getAttribute('data-type');
+                } else {
+                    // 对于运费类别和决策模型，设置默认类型
+                    if (pageId === 'domestic-freight') {
+                        currentType = 'insideinfer';
+                    } else if (pageId === 'international-freight') {
+                        currentType = 'outsideinfer';
+                    } else if (pageId === 'decision-model') {
+                        currentType = 'decision-model';
+                    }
+                }
+                
+                const firstRangeButton = targetPage.querySelector('.range-button');
+                if (firstRangeButton) {
+                    const samePageButtons = targetPage.querySelectorAll('.range-button');
+                    samePageButtons.forEach(btn => btn.classList.remove('active'));
+                    firstRangeButton.classList.add('active');
+                    currentDays = parseInt(firstRangeButton.getAttribute('data-days'));
+                }
+                
+                // 加载对应页面的图表
+                loadChart(pageId, currentType, currentDays);
+            }
+        }
+        
+        // 加载图表
+        function loadChart(pageId, type = null, days = 5) {
+            // 获取用户选择的日期
+            let selectedDate = new Date();
+            
+            if (pageId !== 'decision-model') {
+                const datePickerId = 'datePicker-' + pageId;
+                const datePicker = document.getElementById(datePickerId);
+                
+                if (datePicker && datePicker.value) {
+                    selectedDate = new Date(datePicker.value);
+                }
+            }
+            
+            // 获取图表容器
+            const chartContainerId = 'chart-' + pageId;
+            const chartContainer = document.getElementById(chartContainerId);
+            if (!chartContainer) return;
+            
+            // 初始化图表
+            const myChart = echarts.init(chartContainer);
+            
+            // 从API加载预测数据
+            function loadPredictionData(type, days) {
+                const apiUrl = `http://localhost:5000/api/prediction?type=${type}&days=${days}`;
+                return fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('API请求失败');
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error('Error loading prediction data:', error);
+                        return [];
+                    });
+            }
+            
+            // 从API加载真实数据
+            function loadRealData(realType, days) {
+                const apiUrl = `http://localhost:5000/api/real_data?type=${realType}&days=${days}`;
+                return fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('API请求失败');
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error('Error loading real data:', error);
+                        return [];
+                    });
+            }
+            
+            // 映射预测数据类型到真实数据类型
+            function getRealDataType(predType) {
+                const mapping = {
+                    'CCI3800outinfer': 'CCI3800',
+                    'CCI4500infer': 'CCI4500',
+                    'CCI4700outinfer': 'CCI4700',
+                    'CCI5000infer': 'CCI5000',
+                    'CCI5500infer': 'CCI5500',
+                    'CCI5500outinfer': 'CCI5500',
+                    'insideinfer': 'inside_freight',
+                    'outsideinfer': 'outside_freight'
+                };
+                return mapping[predType] || predType;
+            }
+            
+            // 处理数据并更新图表
+            // 优先使用传入的type参数
+            if (!type) {
+                // 获取当前激活的煤种按钮
+                const activeButton = document.querySelector(`.coal-button[data-page="${pageId}"].active`);
+                type = activeButton ? activeButton.getAttribute('data-type') : null;
+            }
+            
+            // 为运费页面设置默认类型
+            if (!type && (pageId === 'domestic-freight' || pageId === 'international-freight')) {
+                if (pageId === 'domestic-freight') {
+                    type = 'insideinfer';
+                } else if (pageId === 'international-freight') {
+                    type = 'outsideinfer';
+                }
+            }
+            
+            // 并行加载预测数据和真实数据
+            const realType = getRealDataType(type);
+            Promise.all([
+                loadPredictionData(type, days),
+                loadRealData(realType, days)
+            ]).then(([predData, realData]) => {
+                // 生成数据结构
+                let data;
+                
+                if (pageId === 'domestic-coal' || pageId === 'international-coal' || pageId === 'power-generation' || pageId === 'decision-model') {
+                    if (pageId === 'decision-model') {
+                        // 决策模型使用默认数据结构
+                        data = {
+                            'kemeng': {
+                                categories: ['CCI4500', 'CCI5000', 'CCI5500', '进口CCI3800', '进口CCI4700', '进口CCI5500'],
+                                series: [{
+                                    name: '推荐采购数量',
+                                    type: 'bar',
+                                    data: [12000, 15000, 18000, 14000, 10000, 8000]
+                                }]
+                            },
+                            'shaowu': {
+                                categories: ['CCI4500', 'CCI5000', 'CCI5500', '进口CCI3800', '进口CCI4700', '进口CCI5500'],
+                                series: [{
+                                    name: '推荐采购数量',
+                                    type: 'bar',
+                                    data: [10000, 12000, 15000, 11000, 8000, 6000]
+                                }]
+                            },
+                            'yongan': {
+                                categories: ['CCI4500', 'CCI5000', 'CCI5500', '进口CCI3800', '进口CCI4700', '进口CCI5500'],
+                                series: [{
+                                    name: '推荐采购数量',
+                                    type: 'bar',
+                                    data: [8000, 10000, 12000, 9000, 7000, 5000]
+                                }]
+                            },
+                            'zhangping': {
+                                categories: ['CCI4500', 'CCI5000', 'CCI5500', '进口CCI3800', '进口CCI4700', '进口CCI5500'],
+                                series: [{
+                                    name: '推荐采购数量',
+                                    type: 'bar',
+                                    data: [7000, 9000, 11000, 8000, 6000, 4000]
+                                }]
+                            }
+                        }[type || 'kemeng'];
+                    } else if (pageId === 'power-generation') {
+                        // 发电量预测使用默认数据结构
+                        const dates = [];
+                        const defaultData = [];
+                        for (let i = 0; i < 60; i++) {
+                            const date = new Date(selectedDate);
+                            date.setDate(selectedDate.getDate() + i);
+                            dates.push(date.format('m-d'));
+                            defaultData.push(1000 + i * 5);
+                        }
+                        
+                        data = {
+                            categories: dates,
+                            series: [{
+                                name: type === 'kemeng' ? '可门电厂' : 
+                                      type === 'shaowu' ? '邵武电厂' : 
+                                      type === 'yongan' ? '永安电厂' : '漳平电厂',
+                                data: defaultData
+                            }]
+                        };
+                    } else {
+                        // 处理预测数据
+                        const predCategories = predData.map(item => {
+                            const date = new Date(item.date);
+                            return date.format('m-d');
+                        });
+                        const predValues = predData.map(item => item.predict);
+                        
+                        // 处理真实数据
+                        const realValues = realData.map(item => item.value);
+                        const realCategories = realData.map(item => {
+                            const date = new Date(item.date);
+                            return date.format('m-d');
+                        });
+                        
+                        // 确定系列名称
+                        let seriesName = type;
+                        if (type === 'CCI4500infer') seriesName = 'CCI4500';
+                        else if (type === 'CCI5000infer') seriesName = 'CCI5000';
+                        else if (type === 'CCI5500infer') seriesName = 'CCI5500';
+                        else if (type === 'CCI3800outinfer') seriesName = '进口CCI3800';
+                        else if (type === 'CCI4700outinfer') seriesName = '进口CCI4700';
+                        else if (type === 'CCI5500outinfer') seriesName = '进口CCI5500';
+                        
+                        // 使用预测数据的时间范围
+                        const categories = predCategories.length > 0 ? predCategories : realCategories;
+                        
+                        data = {
+                            categories: categories,
+                            series: [
+                                {
+                                    name: seriesName + ' (预测)',
+                                    data: predValues
+                                },
+                                {
+                                    name: seriesName + ' (真实)',
+                                    data: realValues
+                                }
+                            ]
+                        };
+                    }
+                } else if (pageId === 'domestic-freight' || pageId === 'international-freight') {
+                    // 处理预测数据
+                    const predCategories = predData.map(item => {
+                        const date = new Date(item.date);
+                        return date.format('m-d');
+                    });
+                    const predValues = predData.map(item => item.predict);
+                    
+                    // 处理真实数据
+                    const realValues = realData.map(item => item.value);
+                    const realCategories = realData.map(item => {
+                        const date = new Date(item.date);
+                        return date.format('m-d');
+                    });
+                    
+                    // 使用预测数据的时间范围
+                    const categories = predCategories.length > 0 ? predCategories : realCategories;
+                    
+                    data = {
+                        categories: categories,
+                        series: [
+                            {
+                                name: pageId === 'domestic-freight' ? '国内运费 (预测)' : '国际运费 (预测)',
+                                data: predValues
+                            },
+                            {
+                                name: pageId === 'domestic-freight' ? '国内运费 (真实)' : '国际运费 (真实)',
+                                data: realValues
+                            }
+                        ]
+                    };
+                }
+                
+                if (!data) return;
+                
+                // 根据选择的天数调整数据
+                let adjustedCategories = data.categories;
+                let adjustedSeries = JSON.parse(JSON.stringify(data.series));
+                
+                // 只调整折线图，不调整决策模型的柱状图
+                if (pageId !== 'decision-model' && days < adjustedCategories.length) {
+                    adjustedCategories = adjustedCategories.slice(0, days);
+                    adjustedSeries.forEach(serie => {
+                        serie.data = serie.data.slice(0, days);
+                    });
+                }
+                
+                // 生成决策文字输出
+                if (pageId === 'decision-model') {
+                    generateDecisionText(selectedDate);
+                }
+                
+                // 设置图表选项
+                const option = {
+                    backgroundColor: 'transparent',
+                    title: {
+                        text: pageId === 'domestic-coal' ? '国内煤价预测趋势' :
+                              pageId === 'international-coal' ? '国际煤价预测趋势' :
+                              pageId === 'domestic-freight' ? '国内运费预测趋势' :
+                              pageId === 'international-freight' ? '国际运费预测趋势' :
+                              pageId === 'power-generation' ? '发电量预测趋势' :
+                              '推荐采购数量分析',
+                        left: 'center',
+                        textStyle: {
+                            color: '#1a56db',
+                            fontSize: 18,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#1a56db',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        textStyle: {
+                            color: '#333',
+                            fontSize: 14
+                        },
+                        padding: 12,
+                        formatter: function(params) {
+                            let result = params[0].name + '<br/>';
+                            params.forEach(item => {
+                                result += item.marker + item.seriesName + ': ' + item.value + '<br/>';
+                            });
+                            return result;
+                        }
+                    },
+                    legend: {
+                        data: pageId !== 'decision-model' && pageId !== 'power-generation' ? 
+                              [data.series[0].name, data.series[1].name] : 
+                              (pageId === 'power-generation' ? [data.series[0].name] : []),
+                        top: 30,
+                        textStyle: {
+                            color: '#4b5563'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        top: pageId !== 'decision-model' && pageId !== 'power-generation' ? '20%' : '15%',
+                        containLabel: true
+                    },
+                    dataZoom: [
+                        {
+                            type: 'slider',
+                            xAxisIndex: 0,
+                            start: 0,
+                            end: 100
+                        },
+                        {
+                            type: 'inside',
+                            xAxisIndex: 0,
+                            start: 0,
+                            end: 100
+                        }
+                    ],
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: pageId === 'decision-model' ? true : false,
+                        data: adjustedCategories,
+                        axisLine: {
+                            lineStyle: {
+                                color: '#1a56db',
+                                width: 2
+                            }
+                        },
+                        axisLabel: {
+                            color: '#4b5563',
+                            rotate: pageId === 'decision-model' ? 30 : 0,
+                            fontSize: 12
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#e0e7ff'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: pageId === 'power-generation' ? '发电量（万千瓦时）' : 
+                              pageId === 'decision-model' ? '采购数量（吨）' : '价格（元/吨）',
+                        nameTextStyle: {
+                            color: '#4b5563',
+                            fontSize: 12
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#1a56db',
+                                width: 2
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#e0e7ff',
+                                type: 'dashed'
+                            }
+                        },
+                        axisLabel: {
+                            color: '#4b5563',
+                            fontSize: 12
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#e0e7ff'
+                            }
+                        }
+                    },
+                    series: adjustedSeries.map((item, index) => ({
+                        name: item.name,
+                        type: pageId === 'decision-model' ? 'bar' : 'line',
+                        data: item.data,
+                        lineStyle: {
+                            width: 3,
+                            shadowColor: index === 0 ? 'rgba(26, 86, 219, 0.5)' : 'rgba(39, 174, 96, 0.5)',
+                            shadowBlur: 10,
+                            shadowOffsetY: 5
+                        },
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        itemStyle: {
+                            color: function(params) {
+                                if (pageId === 'decision-model') {
+                                    const colors = ['#1a56db', '#3498db', '#64b5f6', '#90caf9', '#bbdefb', '#e3f2fd'];
+                                    return colors[params.dataIndex % colors.length];
+                                }
+                                // 预测数据用蓝色，真实数据用绿色
+                                return index === 0 ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: '#1a56db' },
+                                    { offset: 1, color: '#3498db' }
+                                ]) : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: '#27ae60' },
+                                    { offset: 1, color: '#2ecc71' }
+                                ]);
+                            },
+                            borderRadius: pageId === 'decision-model' ? [8, 8, 0, 0] : 0,
+                            shadowColor: index === 0 ? 'rgba(26, 86, 219, 0.5)' : 'rgba(39, 174, 96, 0.5)',
+                            shadowBlur: 10,
+                            shadowOffsetY: 5
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 20,
+                                shadowColor: index === 0 ? 'rgba(26, 86, 219, 0.8)' : 'rgba(39, 174, 96, 0.8)'
+                            }
+                        },
+                        animation: true,
+                        animationDuration: 1500,
+                        animationEasing: 'cubicOut'
+                    }))
+                };
+                
+                // 设置图表
+                myChart.setOption(option);
+                
+                // 响应式调整
+                window.addEventListener('resize', function() {
+                    myChart.resize();
+                });
+            });
+        }
+        
+        // 生成决策文字输出
+        function generateDecisionText(selectedDate) {
+            // 获取当前激活的电厂按钮
+            const activeButton = document.querySelector('.coal-button[data-page="decision-model"].active');
+            const activeType = activeButton ? activeButton.getAttribute('data-type') : 'kemeng';
+            
+            // 根据电厂类型生成不同的决策文本
+            let powerPlantName;
+            switch(activeType) {
+                case 'kemeng':
+                    powerPlantName = '可门电厂';
+                    break;
+                case 'shaowu':
+                    powerPlantName = '邵武电厂';
+                    break;
+                case 'yongan':
+                    powerPlantName = '永安电厂';
+                    break;
+                case 'zhangping':
+                    powerPlantName = '漳平电厂';
+                    break;
+                default:
+                    powerPlantName = '可门电厂';
+            }
+            
+            // 格式化日期
+            const formattedDate = selectedDate.format('Y-m-d');
+            const nextMonthDate = new Date(selectedDate);
+            nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+            const formattedNextMonthDate = nextMonthDate.format('Y-m-d');
+            
+            // 生成简化的决策文本
+            const decisionText = `
+                <p>本月采购策略分析：</p>
+                <p>• 第三周和第四周采购量较大，分别为73828.16吨和297769.84吨，需求旺盛。</p>
+                <p>• 煤炭供应充足，但需提前补货以确保供应平衡。</p>
+                <p><strong>决策日： ${formattedDate}</strong></p>
+                <p><strong>【正常】库存策略执行中。</strong></p>
+                <p><strong>30天总采购量：371598.00 吨</strong></p>
+                <p><strong>未来30天采购计划：</strong></p>
+                <p>• 第一个周期（${formattedDate}）：采购总量 0.00吨</p>
+                <p>• 第二个周期（${formattedNextMonthDate}）：采购总量 0.00吨</p>
+                <p>• 第三个周期（${formattedNextMonthDate}）：采购总量 73828.16吨</p>
+                <p>• 第四个周期（${formattedNextMonthDate}）：采购总量 297769.84吨</p>
+            `;
+            
+            // 更新决策文本
+            const decisionTextElement = document.getElementById('decision-text');
+            if (decisionTextElement) {
+                decisionTextElement.innerHTML = decisionText;
+            }
+        }
+        
+        // 日期格式化函数
+        Date.prototype.format = function(fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,
+                "m+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "Y+": this.getFullYear(),
+            };
+            
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            
+            return fmt;
+        };
+        
+        // 检查用户是否是会员
+        function checkIsPredictionVIP(flag) {
+            if (isPredictionVIP) {
+                $('#foor-content-contact1').hide();
+                $('#foor-content-contact2').hide();
+                
+                // 加载当前显示页面的数据
+                const activePage = document.querySelector('.page-content[style*="display: block"]');
+                if (activePage) {
+                    const pageId = activePage.id.replace('-page', '');
+                    loadChart(pageId, null, currentDays);
+                } else {
+                    // 默认加载第一个页面数据
+                    loadChart('domestic-coal', null, currentDays);
+                }
+            } else {
+                $('#foor-content-contact1').show();
+                $('#foor-content-contact2').hide();
+                document.getElementById('foor-content-contact1').innerHTML = "请成为会员查看完整数据";
+            }
+        }
+        
+        // 日期选择事件
+        function checkTime() {
+            if (!user || user == 'null') {
+                $('#foor-content-contact1').hide();
+                $('#foor-content-contact2').show();
+                return;
+            }
+            
+            checkIsPredictionVIP(true);
+        }
+    </script>
+</body>
+</html>

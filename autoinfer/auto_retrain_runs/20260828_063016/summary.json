@@ -1,0 +1,126 @@
+{
+  "created_at": "2026-08-28T06:31:41",
+  "monitor": {
+    "latest_actual_date": "2026-08-27",
+    "latest_evaluated_date": "2026-08-27",
+    "evaluated_dates": [
+      "2026-08-21",
+      "2026-08-24",
+      "2026-08-25",
+      "2026-08-26",
+      "2026-08-27"
+    ],
+    "overall_mape": 1.2000656553682278,
+    "direction_accuracy": 0.4631578947368421,
+    "direction_samples": 95,
+    "per_index": {
+      "CCI4500": {
+        "n": 25,
+        "mape": 0.840036433197231,
+        "direction_accuracy": 0.45454545454545453,
+        "direction_n": 11
+      },
+      "CCI5000": {
+        "n": 25,
+        "mape": 0.8120719096642763,
+        "direction_accuracy": 0.0,
+        "direction_n": 14
+      },
+      "CCI5500": {
+        "n": 25,
+        "mape": 0.7086209501747897,
+        "direction_accuracy": 0.2,
+        "direction_n": 10
+      },
+      "CCI进口3800": {
+        "n": 25,
+        "mape": 1.6129825163772225,
+        "direction_accuracy": 0.55,
+        "direction_n": 20
+      },
+      "CCI进口4700": {
+        "n": 25,
+        "mape": 1.834526496562701,
+        "direction_accuracy": 0.95,
+        "direction_n": 20
+      },
+      "CCI进口5500": {
+        "n": 25,
+        "mape": 1.3921556262331478,
+        "direction_accuracy": 0.35,
+        "direction_n": 20
+      }
+    },
+    "per_horizon": {
+      "h1": {
+        "n": 30,
+        "mape": 0.5188639688139907,
+        "direction_accuracy": null,
+        "direction_n": 0
+      },
+      "h2": {
+        "n": 30,
+        "mape": 0.8998684201692245,
+        "direction_accuracy": 0.6842105263157895,
+        "direction_n": 19
+      },
+      "h3": {
+        "n": 30,
+        "mape": 1.2910954086967665,
+        "direction_accuracy": 0.34782608695652173,
+        "direction_n": 23
+      },
+      "h4": {
+        "n": 30,
+        "mape": 1.5613891724584132,
+        "direction_accuracy": 0.4074074074074074,
+        "direction_n": 27
+      },
+      "h5": {
+        "n": 30,
+        "mape": 1.7291113067027444,
+        "direction_accuracy": 0.46153846153846156,
+        "direction_n": 26
+      }
+    },
+    "records": 150
+  },
+  "threshold_reasons": [
+    "direction accuracy 0.463 <= 0.550"
+  ],
+  "profile": "trend_recovery",
+  "profile_parameters": {
+    "TRAIN_EPOCHS": "12",
+    "PATIENCE": "5",
+    "LEARNING_RATE": "0.0007",
+    "FORECAST_LOSS": "mse",
+    "USE_SHORT_HORIZON_WEIGHT_LOSS": "1",
+    "SHORT_HORIZON_WEIGHT_DAYS": "20",
+    "SHORT_HORIZON_WEIGHT": "3.0",
+    "USE_ACC_LOSS": "0",
+    "USE_SHORT_TREND_LOSS": "1",
+    "SHORT_TREND_LOSS_WEIGHT": "2.0",
+    "SHORT_TREND_MONTH_LEN": "5",
+    "SHORT_TREND_MONTH_WEIGHTS": "0.45,0.22,0.11,0.07,0.05,0.035,0.025,0.015,0.01,0.005",
+    "SHORT_TREND_MAX_SEGMENTS": "10",
+    "SYNC_LOSS_WEIGHT": "0.02"
+  },
+  "active_model_id": "Coal6_JulyShort_Trend5dStrong32_Prod_20260730",
+  "candidate_model_id": "Coal6_AutoCandidate_20260828_063016",
+  "baseline_metrics": {
+    "mape5": 1.8348790743813495,
+    "mape20": 3.3989024473537848,
+    "mape120": 10.058584881233608,
+    "slope20_direction": 0.39659143251957624,
+    "composite": 0.8148593162121792
+  },
+  "candidate_metrics": {
+    "mape5": 1.499928209454988,
+    "mape20": 3.7927284337023406,
+    "mape120": 10.372282927386397,
+    "slope20_direction": 0.37540304007369873,
+    "composite": 0.8027787017405627
+  },
+  "promote": false,
+  "decision_reason": "candidate 20-day MAPE regressed by more than 5%"
+}

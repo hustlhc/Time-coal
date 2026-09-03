@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>当前预测走势</title>
+  <script src="./echarts.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d8dee9;
+      --accent: #0f766e;
+      --accent-weak: #e6f4f1;
+      --danger: #b42318;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    input[type="date"] {
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 10px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    button {
+      height: 36px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 0 14px;
+      color: #fff;
+      background: var(--accent);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: .65;
+    }
+
+    main {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 20px 28px 32px;
+    }
+
+    .status {
+      min-height: 28px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      min-height: 82px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .metric .name {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .metric .value {
+      margin-top: 8px;
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .metric .delta {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .chart-wrap {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .chart-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .chart-title span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .chart {
+      width: 100%;
+      height: 520px;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      .chart {
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>当前预测走势</h1>
+    <div class="toolbar">
+      <label>推理日期 <input id="inferDate" type="date"></label>
+      <label><input id="smoothLine" type="checkbox" checked> 平滑显示</label>
+      <button id="reloadBtn" type="button">刷新</button>
+    </div>
+  </header>
+  <main>
+    <div id="status" class="status">准备加载...</div>
+    <section id="summary" class="summary"></section>
+    <section class="chart-wrap">
+      <div class="chart-title">煤价 120 天预测 <span id="coalInfo"></span></div>
+      <div id="coalChart" class="chart"></div>
+    </section>
+    <section class="chart-wrap">
+      <div class="chart-title">运费 120 天预测 <span id="freightInfo"></span></div>
+      <div id="freightChart" class="chart"></div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = `${window.location.protocol}//${window.location.hostname}:8081`;
+    const DAYS = 120;
+    const LOOKBACK_DAYS = 30;
+    const FALLBACK_INFER_DATE = "2026-06-17";
+
+    const coalSeries = [
+      { name: "CCI3800外", pred: "CCI3800outinfer" },
+      { name: "CCI4500", pred: "CCI4500infer" },
+      { name: "CCI4700外", pred: "CCI4700outinfer" },
+      { name: "CCI5000", pred: "CCI5000infer" },
+      { name: "CCI5500", pred: "CCI5500infer" },
+      { name: "CCI5500外", pred: "CCI5500outinfer" }
+    ];
+
+    const freightSeries = [
+      { name: "内贸运费", pred: "insideinfer" },
+      { name: "外贸运费", pred: "outsideinfer" }
+    ];
+
+    const colors = ["#0f766e", "#2563eb", "#b45309", "#7c3aed", "#dc2626", "#0891b2", "#4d7c0f", "#c026d3"];
+    const statusEl = document.getElementById("status");
+    const summaryEl = document.getElementById("summary");
+    const inferDateEl = document.getElementById("inferDate");
+    const smoothEl = document.getElementById("smoothLine");
+    const reloadBtn = document.getElementById("reloadBtn");
+    const coalChart = echarts.init(document.getElementById("coalChart"));
+    const freightChart = echarts.init(document.getElementById("freightChart"));
+
+    function fmtDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function addDays(dateText, offset) {
+      const d = new Date(`${dateText}T00:00:00`);
+      d.setDate(d.getDate() + offset);
+      return fmtDate(d);
+    }
+
+    function setStatus(text, isError = false) {
+      statusEl.textContent = text;
+      statusEl.classList.toggle("error", isError);
+    }
+
+    async function api(path, params) {
+      const url = new URL(path, API_BASE);
+      Object.entries(params || {}).forEach(([key, value]) => url.searchParams.set(key, value));
+      const res = await fetch(url.toString(), { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`${res.status} ${res.statusText}`);
+      }
+      return res.json();
+    }
+
+    async function findLatestInferDate(startDate) {
+      for (let i = 0; i <= LOOKBACK_DAYS; i += 1) {
+        const candidate = addDays(startDate, -i);
+        const sample = await api("/api/prediction", {
+          type: "CCI4500infer",
+          days: 1,
+          date: candidate
+        });
+        if (Array.isArray(sample) && sample.length > 0) {
+          return candidate;
+        }
+      }
+      throw new Error(`最近 ${LOOKBACK_DAYS} 天没有找到 CCI4500 预测`);
+    }
+
+    async function loadPrediction(config, inferDate) {
+      const rows = await api("/api/prediction", {
+        type: config.pred,
+        days: DAYS,
+        date: inferDate
+      });
+      return {
+        ...config,
+        rows: Array.isArray(rows) ? rows : []
+      };
+    }
+
+    function buildDates(groups) {
+      const dates = new Set();
+      groups.forEach(group => group.rows.forEach(row => dates.add(row.date)));
+      return Array.from(dates).sort();
+    }
+
+    function valueMap(rows) {
+      const map = new Map();
+      rows.forEach(row => map.set(row.date, Number(row.predict)));
+      return map;
+    }
+
+    function renderChart(chart, title, groups, dates) {
+      const smooth = smoothEl.checked;
+      chart.setOption({
+        color: colors,
+        tooltip: { trigger: "axis", valueFormatter: value => value == null ? "-" : Number(value).toFixed(2) },
+        legend: { top: 10, type: "scroll" },
+        grid: { top: 64, right: 28, bottom: 68, left: 64 },
+        dataZoom: [
+          { type: "inside" },
+          { type: "slider", height: 24, bottom: 22 }
+        ],
+        xAxis: { type: "category", boundaryGap: false, data: dates },
+        yAxis: { type: "value", scale: true, axisLabel: { formatter: value => Number(value).toFixed(0) } },
+        series: groups.map(group => {
+          const map = valueMap(group.rows);
+          return {
+            name: group.name,
+            type: "line",
+            smooth,
+            showSymbol: false,
+            connectNulls: true,
+            lineStyle: { width: 2 },
+            emphasis: { focus: "series" },
+            data: dates.map(date => map.has(date) ? map.get(date) : null)
+          };
+        })
+      }, true);
+    }
+
+    function renderSummary(groups) {
+      summaryEl.innerHTML = groups.map(group => {
+        const first = group.rows[0];
+        const last = group.rows[group.rows.length - 1];
+        const delta = first && last ? Number(last.predict) - Number(first.predict) : 0;
+        const sign = delta > 0 ? "+" : "";
+        return `
+          <div class="metric">
+            <div class="name">${group.name}</div>
+            <div class="value">${last ? Number(last.predict).toFixed(2) : "-"}</div>
+            <div class="delta">120天变化 ${first && last ? `${sign}${delta.toFixed(2)}` : "-"}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function refresh() {
+      reloadBtn.disabled = true;
+      try {
+        setStatus("正在加载预测数据...");
+        const chosen = inferDateEl.value || fmtDate(new Date());
+        let latest;
+        try {
+          latest = await findLatestInferDate(chosen);
+        } catch (err) {
+          latest = await findLatestInferDate(FALLBACK_INFER_DATE);
+        }
+        inferDateEl.value = latest;
+
+        const [coalGroups, freightGroups] = await Promise.all([
+          Promise.all(coalSeries.map(item => loadPrediction(item, latest))),
+          Promise.all(freightSeries.map(item => loadPrediction(item, latest)))
+        ]);
+
+        const coalDates = buildDates(coalGroups);
+        const freightDates = buildDates(freightGroups);
+        renderSummary([...coalGroups, ...freightGroups]);
+        renderChart(coalChart, "煤价", coalGroups, coalDates);
+        renderChart(freightChart, "运费", freightGroups, freightDates);
+
+        document.getElementById("coalInfo").textContent = `${latest} 推理，${coalDates.length} 个预测点`;
+        document.getElementById("freightInfo").textContent = `${latest} 推理，${freightDates.length} 个预测点`;
+        setStatus(`API: ${API_BASE}，已加载 ${latest} 的预测结果`);
+      } catch (err) {
+        setStatus(`加载失败：${err.message}`, true);
+      } finally {
+        reloadBtn.disabled = false;
+      }
+    }
+
+    reloadBtn.addEventListener("click", refresh);
+    smoothEl.addEventListener("change", refresh);
+    window.addEventListener("resize", () => {
+      coalChart.resize();
+      freightChart.resize();
+    });
+
+    inferDateEl.value = fmtDate(new Date());
+    refresh();
+  </script>
+</body>
+</html>

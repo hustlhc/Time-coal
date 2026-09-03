@@ -1,0 +1,252 @@
+{
+  "decision_date": "2025-4-30",
+  "is_emergency": false,
+  "duration_days": 20,
+  "total_purchase_quantity": 1069493.0,
+  "procurement_plan": [
+    {
+      "cycle_index": 1,
+      "date": "2025/05/04",
+      "total_quantity": 9484.16,
+      "items": [
+        {
+          "coal_name": "CCI4500",
+          "quantity": 3333333,
+          "price": 529.24,
+          "coal_price": 493.0,
+          "freight": 36.24,
+          "delivered_unit_cost": 529.24,
+          "latest_delivery_date": "2025/05/04"
+        },
+        {
+          "coal_name": "CCI5000",
+          "quantity": 5690.5,
+          "price": 596.24,
+          "coal_price": 560.0,
+          "freight": 36.24,
+          "delivered_unit_cost": 596.24,
+          "latest_delivery_date": "2025/05/04"
+        },
+        {
+          "coal_name": "CCI5500",
+          "quantity": 0.0,
+          "price": 676.24,
+          "coal_price": 640.0,
+          "freight": 36.24,
+          "delivered_unit_cost": 676.24,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口3800",
+          "quantity": 0.0,
+          "price": 502.71,
+          "coal_price": 443.01,
+          "freight": 59.7,
+          "delivered_unit_cost": 502.71,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口4700",
+          "quantity": 0.0,
+          "price": 621.66,
+          "coal_price": 561.96,
+          "freight": 59.7,
+          "delivered_unit_cost": 621.66,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口5500",
+          "quantity": 0.0,
+          "price": 736.51,
+          "coal_price": 676.81,
+          "freight": 59.7,
+          "delivered_unit_cost": 736.51,
+          "latest_delivery_date": "0"
+        }
+      ]
+    },
+    {
+      "cycle_index": 2,
+      "date": "2025/05/09",
+      "total_quantity": 187897.98,
+      "items": [
+        {
+          "coal_name": "CCI4500",
+          "quantity": 75159.19,
+          "price": 510.62,
+          "coal_price": 475.0,
+          "freight": 35.62,
+          "delivered_unit_cost": 510.62,
+          "latest_delivery_date": "2025/05/09"
+        },
+        {
+          "coal_name": "CCI5000",
+          "quantity": 112738.79,
+          "price": 578.62,
+          "coal_price": 543.0,
+          "freight": 35.62,
+          "delivered_unit_cost": 578.62,
+          "latest_delivery_date": "2025/05/09"
+        },
+        {
+          "coal_name": "CCI5500",
+          "quantity": 0.0,
+          "price": 658.62,
+          "coal_price": 623.0,
+          "freight": 35.62,
+          "delivered_unit_cost": 658.62,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口3800",
+          "quantity": 0.0,
+          "price": 497.15,
+          "coal_price": 436.49,
+          "freight": 60.66,
+          "delivered_unit_cost": 497.15,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口4700",
+          "quantity": 0.0,
+          "price": 600.76,
+          "coal_price": 540.1,
+          "freight": 60.66,
+          "delivered_unit_cost": 600.76,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口5500",
+          "quantity": 0.0,
+          "price": 725.59,
+          "coal_price": 664.93,
+          "freight": 60.66,
+          "delivered_unit_cost": 725.59,
+          "latest_delivery_date": "0"
+        }
+      ]
+    },
+    {
+      "cycle_index": 3,
+      "date": "2025/05/14",
+      "total_quantity": 448379.07,
+      "items": [
+        {
+          "coal_name": "CCI4500",
+          "quantity": 179351.63,
+          "price": 504.74,
+          "coal_price": 469.0,
+          "freight": 35.74,
+          "delivered_unit_cost": 504.74,
+          "latest_delivery_date": "2025/05/14"
+        },
+        {
+          "coal_name": "CCI5000",
+          "quantity": 269027.44,
+          "price": 571.74,
+          "coal_price": 536.0,
+          "freight": 35.74,
+          "delivered_unit_cost": 571.74,
+          "latest_delivery_date": "2025/05/14"
+        },
+        {
+          "coal_name": "CCI5500",
+          "quantity": 0.0,
+          "price": 653.74,
+          "coal_price": 618.0,
+          "freight": 35.74,
+          "delivered_unit_cost": 653.74,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口3800",
+          "quantity": 0.0,
+          "price": 486.36,
+          "coal_price": 427.73,
+          "freight": 58.63,
+          "delivered_unit_cost": 486.36,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口4700",
+          "quantity": 0.0,
+          "price": 589.83,
+          "coal_price": 531.2,
+          "freight": 58.63,
+          "delivered_unit_cost": 589.83,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口5500",
+          "quantity": 0.0,
+          "price": 707.16,
+          "coal_price": 648.53,
+          "freight": 58.63,
+          "delivered_unit_cost": 707.16,
+          "latest_delivery_date": "0"
+        }
+      ]
+    },
+    {
+      "cycle_index": 4,
+      "date": "2025/05/19",
+      "total_quantity": 423731.79,
+      "items": [
+        {
+          "coal_name": "CCI4500",
+          "quantity": 169492.72,
+          "price": 502.39,
+          "coal_price": 469.0,
+          "freight": 33.39,
+          "delivered_unit_cost": 502.39,
+          "latest_delivery_date": "2025/05/24"
+        },
+        {
+          "coal_name": "CCI5000",
+          "quantity": 254239.08,
+          "price": 569.39,
+          "coal_price": 536.0,
+          "freight": 33.39,
+          "delivered_unit_cost": 569.39,
+          "latest_delivery_date": "2025/05/24"
+        },
+        {
+          "coal_name": "CCI5500",
+          "quantity": 0.0,
+          "price": 651.39,
+          "coal_price": 618.0,
+          "freight": 33.39,
+          "delivered_unit_cost": 651.39,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口3800",
+          "quantity": 0.0,
+          "price": 478.79,
+          "coal_price": 422.03,
+          "freight": 56.76,
+          "delivered_unit_cost": 478.79,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口4700",
+          "quantity": 0.0,
+          "price": 582.26,
+          "coal_price": 525.5,
+          "freight": 56.76,
+          "delivered_unit_cost": 582.26,
+          "latest_delivery_date": "0"
+        },
+        {
+          "coal_name": "CCI进口5500",
+          "quantity": 0.0,
+          "price": 705.29,
+          "coal_price": 648.53,
+          "freight": 56.76,
+          "delivered_unit_cost": 705.29,
+          "latest_delivery_date": "0"
+        }
+      ]
+    }
+  ]
+}

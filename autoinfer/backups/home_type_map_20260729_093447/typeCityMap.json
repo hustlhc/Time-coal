@@ -1,0 +1,34 @@
+{
+  "秦皇岛": {
+    "type": "CCI3800outinfer",
+    "leixing": "meijia"
+  },
+  "广州": {
+    "type": "CCI5000infer",
+    "leixing": "meijia"
+  },
+  "厦门": {
+    "type": "insideinfer",
+    "leixing": "meijia"
+  },
+  "印尼": {
+    "type": "outsideinfer",
+    "leixing": "meijia"
+  },
+  "福建福州 (可门)": {
+    "type": "kemen",
+    "leixing": "dianliang"
+  },
+  "福建南平 (邵武)": {
+    "type": "shaowu",
+    "leixing": "dianliang"
+  },
+  "福建三明 (永安)": {
+    "type": "yongan",
+    "leixing": "dianliang"
+  },
+  "福建龙岩 (漳平)": {
+    "type": "zhangping",
+    "leixing": "dianliang"
+  }
+}

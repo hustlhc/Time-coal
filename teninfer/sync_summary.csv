@@ -1,0 +1,3 @@
+stage,anchor_mode,align_targets,mean_pairwise_corr,direction_agreement,terminal_pct_std,terminal_pct_range
+before,imported_mean,domestic,0.9345337012058834,0.6931652950847997,0.0033964289099900685,0.0070543048384983376
+after,imported_mean,domestic,0.9557618911504034,0.8532212885154062,0.0025042051551584428,0.00674499999082756

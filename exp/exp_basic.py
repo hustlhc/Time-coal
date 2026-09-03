@@ -4,6 +4,7 @@ from models import Autoformer, Transformer, TimesNet, Nonstationary_Transformer,
     Informer, LightTS, Reformer, ETSformer, Pyraformer, PatchTST, MICN, Crossformer, FiLM, iTransformer, \
     Koopa, TiDE, FreTS, TimeMixer, TSMixer, SegRNN, MambaSimple, TemporalFusionTransformer, SCINet, PAttn, TimeXer, \
     WPMixer, MultiPatchFormer
+from utils.device_helper import get_device
 
 
 class Exp_Basic(object):
@@ -53,18 +54,14 @@ class Exp_Basic(object):
         return None
 
     def _acquire_device(self):
-        if self.args.use_gpu and self.args.gpu_type == 'cuda':
-            os.environ["CUDA_VISIBLE_DEVICES"] = str(
-                self.args.gpu) if not self.args.use_multi_gpu else self.args.devices
-            device = torch.device('cuda:{}'.format(self.args.gpu))
-            print('Use GPU: cuda:{}'.format(self.args.gpu))
-        elif self.args.use_gpu and self.args.gpu_type == 'mps':
-            device = torch.device('mps')
-            print('Use GPU: mps')
-        else:
-            device = torch.device('cpu')
-            print('Use CPU')
-        return device
+        # 使用 device_helper 统一处理设备选择，支持 CUDA/XPU/MPS/CPU
+        return get_device(
+            self.args.use_gpu,
+            self.args.gpu_type,
+            self.args.gpu,
+            self.args.devices,
+            self.args.use_multi_gpu
+        )
 
     def _get_data(self):
         pass

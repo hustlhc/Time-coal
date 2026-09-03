@@ -3,10 +3,10 @@ import os
 import torch
 import torch.backends
 from exp.exp_long_term_forecasting import Exp_Long_Term_Forecast
-from exp.exp_imputation import Exp_Imputation
-from exp.exp_short_term_forecasting import Exp_Short_Term_Forecast
-from exp.exp_anomaly_detection import Exp_Anomaly_Detection
-from exp.exp_classification import Exp_Classification
+#from exp.exp_imputation import Exp_Imputation
+#from exp.exp_short_term_forecasting import Exp_Short_Term_Forecast
+#from exp.exp_anomaly_detection import Exp_Anomaly_Detection
+#from exp.exp_classification import Exp_Classification
 from utils.print_args import print_args
 import random
 import numpy as np
@@ -20,12 +20,80 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TimesNet')
 
     # basic config
+    parser.add_argument('--delt',type=int,default=1)
     parser.add_argument('--task_name', type=str, required=True, default='long_term_forecast',
                         help='task name, options:[long_term_forecast, short_term_forecast, imputation, classification, anomaly_detection]')
     parser.add_argument('--is_training', type=int, required=True, default=1, help='status')
     parser.add_argument('--model_id', type=str, required=True, default='test', help='model id')
     parser.add_argument('--model', type=str, required=True, default='Autoformer',
                         help='model name, options: [Autoformer, Transformer, TimesNet]')
+    parser.add_argument('--do_predict', type=int, default=0, help='是否只做推理')
+    parser.add_argument('--is_testing', type=int, default=1, help='是否测试')
+    parser.add_argument('--is_testing4predict', type=int, default=0, help='是否用测试方式推理')
+    parser.add_argument('--is_full_training', type=int, default=1, help='是否全量')
+    parser.add_argument('--do_finetune',type=int, default=0, help='是否微调')
+
+    parser.add_argument('--use_weighted_loss', type=int, default=0,
+                    help='1: enable weighted loss, 0: disable weighted loss')
+    parser.add_argument('--loss_weight_mode', type=str, default='linear', choices=['linear', 'exp', 'piecewise'],
+                    help='weighting strategy for loss')
+    parser.add_argument('--loss_weight_alpha', type=float, default=0.5, help='weight at the beginning (for linear/piecewise)')
+    parser.add_argument('--loss_weight_split', type=float, default=0.5, help='split point (for piecewise)')
+    parser.add_argument('--use_short_horizon_weight_loss', type=int, default=0,
+                    help='1: up-weight the first N forecast steps in MSE loss')
+    parser.add_argument('--short_horizon_weight_days', type=int, default=30,
+                    help='number of early forecast steps to up-weight')
+    parser.add_argument('--short_horizon_weight', type=float, default=2.0,
+                    help='loss weight for the early forecast steps')
+    parser.add_argument('--short_horizon_weight_normalize', type=int, default=1,
+                    help='1: normalize horizon weights so average loss scale stays stable')
+    parser.add_argument('--forecast_loss', type=str, default='mse',
+                    choices=['mse', 'huber', 'mae'],
+                    help='point forecast loss used by long-term forecasting')
+    parser.add_argument('--huber_delta', type=float, default=1.0,
+                    help='Huber transition point in scaled target units')
+
+    parser.add_argument('--use_acc_loss', type=int, default=0,
+                    help='1: enable acc loss, 0: disable acc loss')
+    parser.add_argument('--acc_loss_weight', type=float, default=0.5, help='acc loss weight')
+    parser.add_argument('--use_short_trend_loss', type=int, default=0,
+                    help='1: enable short-horizon trend direction loss')
+    parser.add_argument('--short_trend_loss_weight', type=float, default=0.5,
+                    help='short trend loss weight')
+    parser.add_argument('--short_trend_month_len', type=int, default=20,
+                    help='number of steps per short trend segment')
+    parser.add_argument('--short_trend_month_weights', type=str, default='0.6,0.25,0.15',
+                    help='comma-separated weights for short trend segments')
+    parser.add_argument('--short_trend_max_segments', type=int, default=3,
+                    help='maximum number of trend segments; 6 covers a 120-step forecast with 20-step segments')
+    parser.add_argument('--use_month_onehot', type=int, default=0,
+                    help='1: append 12 month one-hot features to timeF marks')
+    parser.add_argument('--use_seasonal_loss', type=int, default=0,
+                    help='1: enable month-based seasonal loss weights')
+    parser.add_argument('--seasonal_loss_months', type=str, default='9,11,12',
+                    help='comma-separated months to up-weight, e.g. 1,4,6,9,11,12')
+    parser.add_argument('--seasonal_loss_weight', type=float, default=1.3,
+                    help='loss weight for selected seasonal months')
+    parser.add_argument('--seasonal_loss_normalize', type=int, default=1,
+                        help='1: normalize seasonal weights by batch mean')
+    parser.add_argument('--use_sync_loss', type=int, default=0,
+                        help='1: add multi-target trend synchronization loss during training')
+    parser.add_argument('--sync_loss_weight', type=float, default=0.05,
+                        help='weight for multi-target trend synchronization loss')
+    parser.add_argument('--sync_infer_targets', type=int, default=0,
+                        help='1: synchronize multi-target curves inside test/predict outputs')
+    parser.add_argument('--sync_infer_strength', type=float, default=0.6,
+                        help='inference synchronization strength, 0 keeps raw output, 1 fully shares relative trend')
+    parser.add_argument('--sync_anchor_mode', type=str, default='all_mean',
+                        choices=['all_mean', 'domestic_mean', 'imported_mean'],
+                        help='trend synchronization anchor')
+    parser.add_argument('--sync_align_targets', type=str, default='all',
+                        choices=['all', 'domestic', 'imported'],
+                        help='target curves adjusted by trend synchronization')
+    parser.add_argument('--trans',type=int,default=0)
+    parser.add_argument('--last_ten',type=int,default=0)
+
+
 
     # data loader
     parser.add_argument('--data', type=str, required=True, default='ETTh1', help='dataset type')
@@ -33,6 +101,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, default='ETTh1.csv', help='data file')
     parser.add_argument('--features', type=str, default='M',
                         help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
+    parser.add_argument('--target_features', type=int, default=3,
+                        help='forecasting task target feature num (OT num)')
     parser.add_argument('--target', type=str, default='OT', help='target feature in S or MS task')
     parser.add_argument('--freq', type=str, default='h',
                         help='freq for time features encoding, options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], you can also use more detailed freq like 15min or 3h')
@@ -42,8 +112,11 @@ if __name__ == '__main__':
     parser.add_argument('--seq_len', type=int, default=96, help='input sequence length')
     parser.add_argument('--label_len', type=int, default=48, help='start token length')
     parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
+    parser.add_argument('--eval_pred_len', type=int, default=0,
+                        help='validation/test horizon for early stopping; 0 means pred_len')
     parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
-    parser.add_argument('--inverse', action='store_true', help='inverse output data', default=False)
+    parser.add_argument('--inverse', action='store_true', help='inverse output data', default=True)
+    parser.add_argument('--targetnum', type=int, default=1)
 
     # inputation task
     parser.add_argument('--mask_rate', type=float, default=0.25, help='mask ratio')
@@ -100,7 +173,7 @@ if __name__ == '__main__':
     # GPU
     parser.add_argument('--use_gpu', type=bool, default=True, help='use gpu')
     parser.add_argument('--gpu', type=int, default=0, help='gpu')
-    parser.add_argument('--gpu_type', type=str, default='cuda', help='gpu type')  # cuda or mps
+    parser.add_argument('--gpu_type', type=str, default='cuda', help='gpu type: cuda, mps, xpu')
     parser.add_argument('--use_multi_gpu', action='store_true', help='use multiple gpus', default=False)
     parser.add_argument('--devices', type=str, default='0,1,2,3', help='device ids of multile gpus')
 
@@ -140,16 +213,26 @@ if __name__ == '__main__':
     # TimeXer
     parser.add_argument('--patch_len', type=int, default=16, help='patch length')
 
+    # 添加结果保存路径参数
+    parser.add_argument('--csv_path', type=str, default='./pre_result/coal_3800_result.csv', help='full path to save results')
+
     args = parser.parse_args()
-    if torch.cuda.is_available() and args.use_gpu:
-        args.device = torch.device('cuda:{}'.format(args.gpu))
-        print('Using GPU')
+
+    if args.embed == 'timeF':
+        from utils.timefeatures import time_features_from_frequency_str
+        args.time_feature_dim = len(time_features_from_frequency_str(args.freq))
+        if args.use_month_onehot:
+            args.time_feature_dim += 12
     else:
-        if hasattr(torch.backends, "mps"):
-            args.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
-        else:
-            args.device = torch.device("cpu")
-        print('Using cpu or mps')
+        args.time_feature_dim = None
+
+    # 确保结果目录存在
+    if args.csv_path:
+        os.makedirs(os.path.dirname(args.csv_path), exist_ok=True)
+
+    # 使用 device_helper 统一处理设备选择
+    from utils.device_helper import get_device, empty_cache
+    args.device = get_device(args.use_gpu, args.gpu_type, args.gpu, args.devices, args.use_multi_gpu)
 
     if args.use_gpu and args.use_multi_gpu:
         args.devices = args.devices.replace(' ', '')
@@ -162,17 +245,79 @@ if __name__ == '__main__':
 
     if args.task_name == 'long_term_forecast':
         Exp = Exp_Long_Term_Forecast
+    '''
     elif args.task_name == 'short_term_forecast':
         Exp = Exp_Short_Term_Forecast
     elif args.task_name == 'imputation':
         Exp = Exp_Imputation
-    elif args.task_name == 'anomaly_detection':
+    #lif args.task_name == 'anomaly_detection':
         Exp = Exp_Anomaly_Detection
     elif args.task_name == 'classification':
         Exp = Exp_Classification
     else:
         Exp = Exp_Long_Term_Forecast
+   '''
+   
+    if args.do_finetune:
+        exp = Exp(args)
+        ii = 0
+        setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_expand{}_dc{}_fc{}_eb{}_dt{}_{}_{}'.format(
+            args.task_name,
+            args.model_id,
+            args.model,
+            args.data,
+            args.features,
+            args.seq_len,
+            args.label_len,
+            args.pred_len,
+            args.d_model,
+            args.n_heads,
+            args.e_layers,
+            args.d_layers,
+            args.d_ff,
+            args.expand,
+            args.d_conv,
+            args.factor,
+            args.embed,
+            args.distil,
+            args.des, ii)
 
+        print('>>>>>>>finetune : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
+        exp.finetune(setting)   
+        empty_cache(args.device.type)
+        exit(0)
+   
+    if args.do_predict:
+        exp = Exp(args)
+        ii = 0
+        setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_expand{}_dc{}_fc{}_eb{}_dt{}_{}_{}'.format(
+            args.task_name,
+            args.model_id,
+            args.model,
+            args.data,
+            args.features,
+            args.seq_len,
+            args.label_len,
+            args.pred_len,
+            args.d_model,
+            args.n_heads,
+            args.e_layers,
+            args.d_layers,
+            args.d_ff,
+            args.expand,
+            args.d_conv,
+            args.factor,
+            args.embed,
+            args.distil,
+            args.des, ii)
+
+        print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
+        exp.predict(setting)   # 🔹 这里调用你要新增的 predict 方法
+        empty_cache(args.device.type)
+        exit(0)
+
+   
+   
     if args.is_training:
         for ii in range(args.itr):
             # setting record of experiments
@@ -200,13 +345,10 @@ if __name__ == '__main__':
 
             print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
             exp.train(setting)
-
-            print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-            exp.test(setting)
-            if args.gpu_type == 'mps':
-                torch.backends.mps.empty_cache()
-            elif args.gpu_type == 'cuda':
-                torch.cuda.empty_cache()
+            if args.is_testing:     
+                print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
+                exp.test(setting)
+            empty_cache(args.device.type)
     else:
         exp = Exp(args)  # set experiments
         ii = 0
@@ -233,7 +375,4 @@ if __name__ == '__main__':
 
         print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
         exp.test(setting, test=1)
-        if args.gpu_type == 'mps':
-            torch.backends.mps.empty_cache()
-        elif args.gpu_type == 'cuda':
-            torch.cuda.empty_cache()
+        empty_cache(args.device.type)

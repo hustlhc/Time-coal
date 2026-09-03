@@ -5,7 +5,6 @@ from layers.Autoformer_EncDec import series_decomp
 from layers.Embed import DataEmbedding_wo_pos
 from layers.StandardNorm import Normalize
 
-
 class DFT_series_decomp(nn.Module):
     """
     Series decomposition block
@@ -131,6 +130,7 @@ class PastDecomposableMixing(nn.Module):
         elif configs.decomp_method == "dft_decomp":
             self.decompsition = DFT_series_decomp(configs.top_k)
         else:
+            print(configs.decomp_method)
             raise ValueError('decompsition is error')
 
         if not configs.channel_independence:
@@ -200,13 +200,16 @@ class Model(nn.Module):
 
         self.preprocess = series_decomp(configs.moving_avg)
         self.enc_in = configs.enc_in
+        # Trend预测 head
+        self.trend_head = nn.Linear(configs.d_model, 3)  # [B, pred_len, 1]
+
 
         if self.channel_independence:
             self.enc_embedding = DataEmbedding_wo_pos(1, configs.d_model, configs.embed, configs.freq,
-                                                      configs.dropout)
+                                                      configs.dropout, getattr(configs, 'time_feature_dim', None))
         else:
             self.enc_embedding = DataEmbedding_wo_pos(configs.enc_in, configs.d_model, configs.embed, configs.freq,
-                                                      configs.dropout)
+                                                      configs.dropout, getattr(configs, 'time_feature_dim', None))
 
         self.layer = configs.e_layers
 
@@ -373,6 +376,15 @@ class Model(nn.Module):
 
         dec_out = torch.stack(dec_out_list, dim=-1).sum(-1)
         dec_out = self.normalize_layers[0](dec_out, 'denorm')
+        # 原 dec_out: [B, pred_len, target_dim]
+        # 使用最后时间步或平均特征做趋势预测
+        #f_dim = -3
+        #pred_mean = dec_out[:, -self.pred_len:, f_dim:].mean(dim=1)   # [B, 3]
+        #trend_logits = self.trend_head(pred_mean)       # [B, pred_len, 1]
+        #trend_logits = trend_logits.mean(dim=1)         # [B, 3]
+
+        #return dec_out, trend_logits
+
         return dec_out
 
     def future_multi_mixing(self, B, enc_out_list, x_list):

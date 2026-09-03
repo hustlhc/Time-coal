@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo "========================================"
+echo "  启动煤价系统所有服务（含HTTPS）"
+echo "========================================"
+echo "启动时间: $(date '+%Y-%m-%d %H:%M:%S')"
+echo ""
+
+# 停止所有旧服务
+./stop_all.sh 2>/dev/null
+./stop_https.sh 2>/dev/null
+sleep 2
+
+# 启动HTTP网站 (8001)
+echo "[1/4] 启动HTTP网站服务..."
+./web_server.sh
+sleep 2
+
+# 启动HTTPS网站 (8443)
+echo "[2/4] 启动HTTPS网站服务..."
+./https_server.sh
+sleep 2
+
+# 启动API服务 (8081)
+echo "[3/4] 启动API服务..."
+./api_server.sh
+sleep 2
+
+# 启动监控
+echo "[4/4] 启动监控服务..."
+nohup ./monitor_services_https.sh > logs/monitor_daemon.log 2>&1 &
+
+echo ""
+echo "========================================"
+echo "所有服务启动完成！"
+echo ""
+echo "访问地址:"
+echo "  HTTP网站:  http://10.73.56.38:8001"
+echo "  HTTPS网站: https://10.73.56.38:8443"
+echo "  API服务:   http://10.73.56.38:8081"
+echo ""
+echo "HTTPS首次访问会有安全警告，这是正常的！"
+echo "========================================"

@@ -1,0 +1,25 @@
+[Unit]
+Description=Coal Web and API Services
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+User=coal
+WorkingDirectory=/home/lhc/Time-coal/services
+ExecStart=/bin/bash /home/lhc/Time-coal/services/start_all.sh
+ExecStop=/bin/bash /home/lhc/Time-coal/services/stop_all.sh
+Restart=no
+PIDFile=/tmp/web_server.pid
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=coal-services
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/lhc/Time-coal /tmp
+
+[Install]
+WantedBy=multi-user.target

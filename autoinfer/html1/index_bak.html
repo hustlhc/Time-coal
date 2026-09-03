@@ -1,0 +1,3886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华电福建公司电煤采需决策系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf1 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .app-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .ui-floor {
+            background: white;
+            box-shadow: 0 10px 30px rgba(26, 86, 219, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e8f0fe;
+        }
+        
+        .floor-content {
+            padding: 30px;
+        }
+        
+        .foor-content-title {
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a56db, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 15px 0;
+            border-bottom: 3px solid #1a56db;
+        }
+        
+        .foor-content-table {
+            margin-top: 20px;
+        }
+        
+        .controls {
+            display: flex;
+        }
+        
+        /* 左侧按钮选择 */
+        .button-group-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .main-button {
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .main-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .main-button:hover::before {
+            left: 100%;
+        }
+        
+        .main-button.active {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+            box-shadow: 0 6px 20px rgba(26, 86, 219, 0.4);
+        }
+        
+        .main-button.active::before {
+            display: none;
+        }
+        
+        /* 右侧页面内容区域 */
+        .page-content {
+            min-height: 600px;
+        }
+        
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 24px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a56db, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 12px 0;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        
+        .page-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+            border-radius: 10px;
+            border: 1px solid #e0e7ff;
+            box-shadow: 0 2px 8px rgba(26, 86, 219, 0.1);
+        }
+        
+        /* 数据概览卡片 */
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        
+        .overview-card {
+            padding: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+            border-left: 4px solid #1a56db;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #1a56db, #3498db, #1a56db);
+            animation: gradientFlow 3s ease infinite;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.25);
+        }
+        
+        .overview-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 12px;
+        }
+        
+        .overview-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a56db, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .overview-card .unit {
+            font-size: 14px;
+            color: #6b7280;
+            margin-left: 8px;
+        }
+        
+        /* 数据表格 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+            font-weight: 700;
+            color: #1a56db;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table tr:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+        }
+        
+        /* 趋势分析 */
+        .trend-analysis {
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.1);
+            border: 1px solid #e0e7ff;
+        }
+        
+        .trend-analysis p {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        /* 数据来源 */
+        .data-source {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e7ff;
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+        }
+        
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+        
+        .action-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .action-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .action-button:hover::before {
+            left: 100%;
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+        }
+        
+        .action-button.primary:hover {
+            background: linear-gradient(135deg, #1548b3 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 16px rgba(26, 86, 219, 0.4);
+        }
+        
+        .date-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .date-control label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .time-range-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .time-range-control label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .date-picker {
+            padding: 10px 16px;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .date-picker:focus {
+            outline: none;
+            border-color: #1a56db;
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .range-button {
+            padding: 8px 18px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .range-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .range-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .range-button:hover::before {
+            left: 100%;
+        }
+        
+        .range-button.active {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.4);
+        }
+        
+        /* 煤种选择器 */
+        .coal-type-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .coal-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coal-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 86, 219, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .coal-button:hover {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.2);
+            border-color: #1a56db;
+        }
+        
+        .coal-button:hover::before {
+            left: 100%;
+        }
+        
+        .coal-button.active {
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+            color: white;
+            border-color: #1a56db;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.4);
+        }
+        
+        /* 图表容器 */
+        .mw-all {
+            width: 100%;
+        }
+        
+        .mh-580 {
+            height: 580px;
+        }
+        
+        .mt-10 {
+            margin-top: 10px;
+        }
+        
+        /* 图表容器美化 */
+        .chart-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+            border: 1px solid #e0e7ff;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .button-group-vertical {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .page-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .time-range-control {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    <!-- ECharts -->
+    <script src="echarts.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="font-awesome.min.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="bootstrap-datepicker.min.css">
+    <!-- jQuery -->
+    <script src="jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="bootstrap-datepicker.min.js"></script>
+    <script src="bootstrap-datepicker.zh-CN.min.js"></script>
+</head>
+<body>
+    <div class="app-content">
+        <div class="ui-floor ui-f_h mt-40" id="floor1">
+            <div class="ui-floor-nav clear">
+                <div class="floor-content">
+                    <div class="foor-content-title">
+                        <div class="float-left">
+                            <h1 id="title" class="title">华电福建公司电煤采需决策系统</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="foor-content-table">
+                        <div class="controls" style="display: flex;">
+                            <!-- 左侧按钮选择 -->
+                            <div style="flex: 0 0 250px; margin-right: 20px;">
+                                <div class="button-group-vertical">
+                                    <button class="main-button" onclick="window.location.href='main.html'" style="background: linear-gradient(135deg, #1a56db 0%, #3498db 100%); color: white;">
+                                         返回主界面
+                                    </button>
+                                    <button class="main-button" data-page="domestic-coal">北方港煤价</button>
+                                    <button class="main-button" data-page="international-coal">进口煤价</button>
+                                    <button class="main-button" data-page="domestic-freight">国内海运费</button>
+                                    <button class="main-button" data-page="international-freight">国际海运费</button>
+                                    <button class="main-button" data-page="power-generation">发电量预测</button>
+                                    <button class="main-button" data-page="decision-model">采需决策</button>
+                                    <div class="dropdown" style="position: relative; display: inline-block;">
+                                        <button class="main-button dropdown-toggle" onclick="toggleWeeklyReportDropdown()" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white;">
+                                            下载周报
+                                            
+                                        </button>
+                                        <div id="weeklyReportDropdown" class="dropdown-content" style="display: none; position: fixed; right: 20px; top: 100px; background-color: #f9f9f9; min-width: 200px; max-height: 400px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1000; border-radius: 5px; overflow: hidden;">
+                                            <a href="#" onclick="downloadLatestWeeklyReport()" style="color: black; padding: 12px 16px; text-decoration: none; display: block;">最新周报</a>
+                                            <div id="historicalReports" style="max-height: 300px; overflow-y: auto;">
+                                                <!-- 历史周报列表将在这里动态生成 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 右侧页面内容区域 -->
+                            <div style="flex: 1;">
+                                <!-- 国内煤价页面 -->
+                                <div class="page-content" id="domestic-coal-page">
+                                    <h2>国内北方港电煤价格预测</h2>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-domestic-coal" title="以该日期为基准，显示未来指定周期的预测值和曲线">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-domestic-coal" placeholder="年-月-日" title="以该日期为基准，显示未来指定周期的预测值和曲线">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label title="基于基准日输出未来指定周期(指数日)的预测值和曲线">时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="domestic-coal" title="基于基准日输出未来5天的预测值和曲线">5日</button>
+                                            <button class="range-button" data-days="10" data-page="domestic-coal" title="基于基准日输出未来10天的预测值和曲线">10日</button>
+                                            <button class="range-button" data-days="20" data-page="domestic-coal" title="基于基准日输出未来20天的预测值和曲线">20日</button>
+                                            <button class="range-button" data-days="60" data-page="domestic-coal" title="基于基准日输出未来60天的预测值和曲线">60日</button>
+                                        </div>
+                                    </div>
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="CCI4500infer" data-page="domestic-coal">CCI4500</button>
+                                        <button class="coal-button" data-type="CCI5000infer" data-page="domestic-coal">CCI5000</button>
+                                        <button class="coal-button" data-type="CCI5500infer" data-page="domestic-coal">CCI5500</button>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-domestic-coal" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 国际煤价页面 -->
+                                <div class="page-content" id="international-coal-page" style="display: none;">
+                                    <h2>进口煤价格预测</h2>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-international-coal" title="以该日期为基准，显示未来指定周期的预测值和曲线">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-international-coal" placeholder="年-月-日" title="以该日期为基准，显示未来指定周期的预测值和曲线">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label title="基于基准日输出未来指定周期(指数日)的预测值和曲线">时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="international-coal" title="基于基准日输出未来5天的预测值和曲线">5日</button>
+                                            <button class="range-button" data-days="10" data-page="international-coal" title="基于基准日输出未来10天的预测值和曲线">10日</button>
+                                            <button class="range-button" data-days="20" data-page="international-coal" title="基于基准日输出未来20天的预测值和曲线">20日</button>
+                                            <button class="range-button" data-days="60" data-page="international-coal" title="基于基准日输出未来60天的预测值和曲线">60日</button>
+                                        </div>
+                                    </div>
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="CCI3800outinfer" data-page="international-coal">进口CCI3800</button>
+                                        <button class="coal-button" data-type="CCI4700outinfer" data-page="international-coal">进口CCI4700</button>
+                                        <button class="coal-button" data-type="CCI5500outinfer" data-page="international-coal">进口CCI5500</button>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-international-coal" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 国内运费页面 -->
+                                <div class="page-content" id="domestic-freight-page" style="display: none;">
+                                    <h2>国内煤炭海运费预测</h2>
+                                    <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">秦皇岛港至厦门港（5~6万吨）海运费</p>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-domestic-freight" title="以该日期为基准，显示未来指定周期的预测值和曲线">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-domestic-freight" placeholder="年-月-日" title="以该日期为基准，显示未来指定周期的预测值和曲线">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label title="基于基准日输出未来指定周期(指数日)的预测值和曲线">时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="domestic-freight" title="基于基准日输出未来5天的预测值和曲线">5日</button>
+                                            <button class="range-button" data-days="10" data-page="domestic-freight" title="基于基准日输出未来10天的预测值和曲线">10日</button>
+                                            <button class="range-button" data-days="20" data-page="domestic-freight" title="基于基准日输出未来20天的预测值和曲线">20日</button>
+                                            <button class="range-button" data-days="60" data-page="domestic-freight" title="基于基准日输出未来60天的预测值和曲线">60日</button>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-domestic-freight" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 国际运费页面 -->
+                                <div class="page-content" id="international-freight-page" style="display: none;">
+                                    <h2>国际煤炭海运费预测</h2>
+                                    <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">印尼萨马林达-中国广州（7万吨）海运费</p>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-international-freight" title="以该日期为基准，显示未来指定周期的预测值和曲线">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-international-freight" placeholder="年-月-日" title="以该日期为基准，显示未来指定周期的预测值和曲线">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label title="基于基准日输出未来指定周期(指数日)的预测值和曲线">时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="international-freight" title="基于基准日输出未来5天的预测值和曲线">5日</button>
+                                            <button class="range-button" data-days="10" data-page="international-freight" title="基于基准日输出未来10天的预测值和曲线">10日</button>
+                                            <button class="range-button" data-days="20" data-page="international-freight" title="基于基准日输出未来20天的预测值和曲线">20日</button>
+                                            <button class="range-button" data-days="60" data-page="international-freight" title="基于基准日输出未来60天的预测值和曲线">60日</button>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-international-freight" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 发电量预测页面 -->
+                                <div class="page-content" id="power-generation-page" style="display: none;">
+                                    <h2>发电量预测</h2>
+                                    <div class="page-controls">
+                                        <div class="date-control">
+                                            <label for="datePicker-power-generation" title="以该日期为基准，显示未来指定周期的预测值和曲线">选择日期：</label>
+                                            <input type="text" class="date-picker" id="datePicker-power-generation" placeholder="年-月-日" title="以该日期为基准，显示未来指定周期的预测值和曲线">
+                                        </div>
+                                        <div class="time-range-control">
+                                            <label title="基于基准日输出未来指定周期(指数日)的预测值和曲线">时间范围：</label>
+                                            <button class="range-button" data-days="5" data-page="power-generation" title="基于基准日输出未来5天的预测值和曲线">5日</button>
+                                            <button class="range-button" data-days="10" data-page="power-generation" title="基于基准日输出未来10天的预测值和曲线">10日</button>
+                                            <button class="range-button" data-days="20" data-page="power-generation" title="基于基准日输出未来20天的预测值和曲线">20日</button>
+                                            <button class="range-button" data-days="60" data-page="power-generation" title="基于基准日输出未来60天的预测值和曲线">60日</button>
+                                        </div>
+                                    </div>
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="kemen" data-page="power-generation">可门电厂</button>
+                                        <button class="coal-button" data-type="shaowu" data-page="power-generation">邵武电厂</button>
+                                        <button class="coal-button" data-type="yongan" data-page="power-generation">永安电厂</button>
+                                        <button class="coal-button" data-type="zhangping" data-page="power-generation">漳平电厂</button>
+                                    </div>
+                                    <div class="coal-type-selector" style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%); border-radius: 10px; border: 1px solid #e0e7ff; display: flex; align-items: center; gap: 40px;">
+                                        <div style="display: flex; align-items: center;">
+                                            <label style="font-weight: 600; color: #1a56db; margin-right: 15px;">显示方式：</label>
+                                            <button class="coal-button active" data-unit="total" data-page="power-generation">总发电量</button>
+                                            <button class="coal-button" data-unit="units" data-page="power-generation">分机组发电量</button>
+                                        </div>
+                                        <!-- 机组选择（默认隐藏，只在分机组模式下显示） -->
+                                        <div id="unit-selector" style="display: none; align-items: center;">
+                                            <label style="font-weight: 600; color: #1a56db; margin-right: 10px;">选择机组：</label>
+                                            <select id="unit-dropdown" style="padding: 8px 12px; border: 2px solid #e0e7ff; border-radius: 8px; background: white; color: #4b5563; font-size: 14px; cursor: pointer;">
+                                                <!-- 选项将通过JS动态生成 -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div id="chart-power-generation" class="mw-all mh-580 mt-10"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 采需决策页面（完整版） -->
+                                <div class="page-content" id="decision-model-page" style="display: none;">
+                                    <h2 style="font-size: 32px; font-weight: bold; color: #2c3e50; margin-bottom: 30px;">采需决策</h2>
+                                    
+                                    <!-- 电厂选择按钮 -->
+                                    <div class="coal-type-selector">
+                                        <button class="coal-button" data-type="kemen" data-page="decision-model">可门电厂</button>
+                                        <button class="coal-button" data-type="shaowu" data-page="decision-model">邵武电厂</button>
+                                        <button class="coal-button" data-type="yongan" data-page="decision-model">永安电厂</button>
+                                        <button class="coal-button" data-type="zhangping" data-page="decision-model">漳平电厂</button>
+                                    </div>
+                                    
+                                    <!-- 决策历史选择器 -->
+                                    <div class="coal-type-selector" style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%); border-radius: 10px; border: 1px solid #e0e7ff; display: flex; align-items: center; gap: 20px;">
+                                        <label style="font-weight: 600; color: #1a56db;">决策历史：</label>
+                                        <select id="decision-history-dropdown" style="padding: 8px 12px; border: 2px solid #e0e7ff; border-radius: 8px; background: white; color: #4b5563; font-size: 14px; cursor: pointer; flex: 1; max-width: 400px;">
+                                            <option value="">加载中...</option>
+                                        </select>
+                                        <span id="decision-info" style="font-size: 14px; color: #6b7280;"></span>
+                                    </div>
+                                    
+                                    <!-- 推荐采购数量柱状图（按周期显示总采购量） -->
+                                    <div class="ui-floor" style="margin-bottom: 20px; padding: 20px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <h3 style="font-size: 20px; font-weight: bold; color: #2c3e50;">各周期推荐采购总量</h3>
+                                            <div style="font-size: 16px; font-weight: bold; color: #2c3e50; padding: 8px 16px; background-color: #f8f9fa; border-radius: 4px;">
+                                                决策日期：<span id="decision-date">加载中...</span>
+                                            </div>
+                                        </div>
+                                        <div class="chart-container">
+                                            <div id="chart-decision-model" class="mw-all mh-580 mt-10"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 各周期采购详情表格（合并显示所有周期） -->
+                                    <div class="ui-floor" style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
+                                        <h3 style="font-size: 20px; font-weight: bold; color: #2c3e50; margin-bottom: 20px;">
+                                            采购详情 
+                                            <span style="font-size: 16px; color: #6b7280; margin-left: 15px;">总采购量: <span id="total-purchase-quantity">0</span> 吨</span>
+                                        </h3>
+                                        
+                                        <!-- 按采购日期分组的表格容器 -->
+                                        <div id="purchase-details-container"></div>
+                                    </div>
+                                    
+                                    <!-- 决策文字输出 -->
+                                    <div class="ui-floor" style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; margin-top: 20px;">
+                                        <h3 style="font-size: 20px; font-weight: bold; color: #2c3e50; margin-bottom: 20px;">决策分析</h3>
+                                        <div id="decision-text" style="font-size: 14px; line-height: 1.6; color: #333;">
+                                            <!-- 决策文字将在这里动态生成 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== 全局变量定义 ====================
+        var nowDate;
+        var currentType = 'CCI4500infer';
+        var currentDays = 5;
+        var lastSelectedPlant = 'kemen';
+        var currentSelectedDate = null;
+        
+        var user = 'test_user';
+        var isPredictionVIP = true;
+        
+        // 决策数据存储对象 - 按电厂存储
+        var decisionData = {
+            kemen: null,
+            shaowu: null,
+            yongan: null,
+            zhangping: null
+        };
+        
+        // 当前选中的电厂
+        var currentPlant = 'kemen';
+        
+        // JSON文件配置
+        var jsonConfig = {
+            basePath: './procure_plan/',  // JSON文件存放路径
+            files: {
+                kemen: 'kemen_procurement_plan.json',
+                shaowu: 'shaowu_procurement_plan.json',
+                yongan: 'yongan_procurement_plan.json',
+                zhangping: 'zhangping_procurement_plan.json'
+            }
+        };
+        
+        // 电厂中文名称映射
+        var plantNameMap = {
+            'kemen': '可门电厂',
+            'shaowu': '邵武电厂',
+            'yongan': '永安电厂',
+            'zhangping': '漳平电厂'
+        };
+        
+        // ==================== DOM加载完成事件 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded开始执行');
+            // 使用当前日期作为日期选择器的最新可选日期
+            nowDate = new Date().format('Y-m-d');
+            
+            // 初始化日期选择器
+            $('.date-picker').datepicker({
+                language: 'zh-CN',
+                autoclose: true,
+                clearBtn: true,
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                endDate: nowDate
+            }).on('changeDate', function(e) {
+                currentSelectedDate = e.format();
+                checkTime();
+            });
+            
+            // 为所有日期选择器设置默认值
+            document.querySelectorAll('.date-picker').forEach(function(picker) {
+                picker.value = nowDate;
+            });
+            currentSelectedDate = nowDate;
+            
+            // 触发日期选择事件，加载图表
+            checkTime();
+            
+            // 获取所有主按钮、煤种按钮和时间范围按钮
+            const mainButtons = document.querySelectorAll('.main-button');
+            const coalButtons = document.querySelectorAll('.coal-button[data-type]');
+            const rangeButtons = document.querySelectorAll('.range-button');
+            
+            // 为主要按钮添加点击事件
+            mainButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                    
+                    mainButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                    this.classList.add('active');
+                });
+            });
+            
+            // 检查URL锚点并显示对应的页面
+            function checkHash() {
+                const hash = window.location.hash;
+                if (hash) {
+                    const pageId = hash.replace('#', '').replace('-page', '');
+                    if (pageId) {
+                        showPage(pageId);
+                        
+                        mainButtons.forEach(function(btn) {
+                            if (btn.getAttribute('data-page') === pageId) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+                        return;
+                    }
+                }
+                
+                // 默认显示第一个页面
+                showPage('domestic-coal');
+                mainButtons.forEach(function(btn, index) {
+                    if (index === 1) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 页面加载时检查锚点
+            checkHash();
+            
+            // 为煤种按钮添加点击事件
+            coalButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const pageId = this.getAttribute('data-page');
+                    const type = this.getAttribute('data-type');
+                    
+                    const samePageButtons = document.querySelectorAll('.coal-button[data-page="' + pageId + '"][data-type]');
+                    samePageButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                    this.classList.add('active');
+                    currentType = type;
+                    lastSelectedPlant = type;
+                    
+                    // 如果是发电量页面，检查是否需要更新机组选择器
+                    if (pageId === 'power-generation') {
+                        const activeUnitButton = document.querySelector('.coal-button[data-page="power-generation"][data-unit].active');
+                        const currentUnit = activeUnitButton ? activeUnitButton.getAttribute('data-unit') : 'total';
+                        
+                        // 如果当前是分机组模式，重新加载机组列表
+                        if (currentUnit === 'units') {
+                            const unitSelector = document.getElementById('unit-selector');
+                            if (unitSelector) {
+                                unitSelector.style.display = 'block';
+                                loadUnitList(type);
+                            }
+                        }
+                    }
+                    
+                    if (pageId === 'decision-model') {
+                        currentPlant = type;
+                        if (!decisionData[type]) {
+                            loadPlantDecisionData(type);
+                        } else {
+                            updateDecisionPageUI(type);
+                            loadChart(pageId, type, currentDays);
+                        }
+                    } else {
+                        loadChart(pageId, type, currentDays);
+                    }
+                });
+            });
+            
+            // 为时间范围按钮添加点击事件
+            rangeButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const pageId = this.getAttribute('data-page');
+                    const days = parseInt(this.getAttribute('data-days'));
+                    
+                    const samePageButtons = document.querySelectorAll('.range-button[data-page="' + pageId + '"]');
+                    samePageButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                    this.classList.add('active');
+                    currentDays = days;
+                    
+                    loadChart(pageId, null, days);
+                });
+            });
+            
+            // 为分机组按钮添加点击事件
+            document.querySelectorAll('.coal-button[data-unit]').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    const pageId = this.getAttribute('data-page');
+                    const unit = this.getAttribute('data-unit');
+                    
+                    e.stopPropagation();
+                    
+                    const samePageButtons = document.querySelectorAll('.coal-button[data-page="' + pageId + '"][data-unit]');
+                    samePageButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                    this.classList.add('active');
+                    
+                    const selector = '.coal-button[data-page="' + pageId + '"][data-type].active';
+                    let activePlantButton = document.querySelector(selector);
+                    
+                    let currentPlantType;
+                    if (activePlantButton) {
+                        currentPlantType = activePlantButton.getAttribute('data-type');
+                    } else {
+                        currentPlantType = lastSelectedPlant;
+                        const allPlantButtons = document.querySelectorAll('.coal-button[data-page="' + pageId + '"][data-type]');
+                        allPlantButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                        const plantButton = document.querySelector('.coal-button[data-page="' + pageId + '"][data-type="' + lastSelectedPlant + '"]');
+                        if (plantButton) {
+                            plantButton.classList.add('active');
+                        }
+                    }
+                    
+                    // 显示/隐藏机组选择器
+                    const unitSelector = document.getElementById('unit-selector');
+                    if (unit === 'units' && unitSelector) {
+                        unitSelector.style.display = 'block';
+                        // 加载机组列表
+                        loadUnitList(currentPlantType);
+                    } else if (unitSelector) {
+                        unitSelector.style.display = 'none';
+                    }
+                    
+                    loadChart(pageId, currentPlantType, currentDays, true);
+                });
+            });
+            
+            // 监听哈希变化事件
+            window.addEventListener('hashchange', checkHash);
+            
+            // 切换周报下拉菜单
+            window.toggleWeeklyReportDropdown = function() {
+                const dropdown = document.getElementById('weeklyReportDropdown');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                } else {
+                    dropdown.style.display = 'block';
+                    // 加载历史周报列表
+                    loadHistoricalReports();
+                }
+            };
+            
+            // 点击其他地方关闭下拉菜单
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropdown-toggle')) {
+                    const dropdowns = document.getElementsByClassName('dropdown-content');
+                    for (let i = 0; i < dropdowns.length; i++) {
+                        const openDropdown = dropdowns[i];
+                        if (openDropdown.style.display === 'block') {
+                            openDropdown.style.display = 'none';
+                        }
+                    }
+                }
+            };
+            
+            // 加载历史周报列表
+            function loadHistoricalReports() {
+                const reportDirectory = '/week_report/';
+                const historicalReportsContainer = document.getElementById('historicalReports');
+                
+                // 清空容器
+                historicalReportsContainer.innerHTML = '<p style="padding: 12px 16px; color: #666; margin: 0;">加载中...</p>';
+                
+                console.log('开始加载历史周报，目录:', reportDirectory);
+                
+                // 尝试获取周报文件列表
+                fetch(reportDirectory)
+                    .then(response => {
+                        console.log('响应状态:', response.status);
+                        if (!response.ok) {
+                            throw new Error('无法访问周报目录+'+reportDirectory+', 状态码:'+response.status);
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        console.log('获取到HTML内容长度:', html.length);
+                        console.log('HTML内容前1000字符:', html.substring(0, 1000));
+                        
+                        // 解析HTML内容，查找所有Excel文件链接
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const links = doc.querySelectorAll('a[href$=".xlsx"]');
+                        
+                        console.log('找到的Excel文件链接数量:', links.length);
+                        
+                        if (links.length === 0) {
+                            historicalReportsContainer.innerHTML = '<p style="padding: 12px 16px; color: #666; margin: 0;">没有找到历史周报</p>';
+                            return;
+                        }
+                        
+                        // 提取文件名并按日期排序
+                        const files = Array.from(links).map(link => {
+                            let href = link.getAttribute('href');
+                            // 确保路径包含 /week_report/ 前缀
+                            if (!href.startsWith('/week_report/')) {
+                                href = '/week_report/' + href;
+                            }
+                            let filename = href.split('/').pop();
+                            console.log('找到文件:', filename, '路径:', href);
+                            
+                            // 尝试解码文件名，处理乱码问题
+                            try {
+                                // 尝试解码URL编码的文件名
+                                filename = decodeURIComponent(filename);
+                                console.log('解码后的文件名:', filename);
+                            } catch (e) {
+                                console.log('解码失败:', e);
+                            }
+                            
+                            // 提取日期范围作为显示文本
+                            let displayName = filename;
+                            const dateMatch = filename.match(/\((\d+\.\d+-\d+\.\d+)\)/);
+                            if (dateMatch && dateMatch[1]) {
+                                displayName = dateMatch[1];
+                            } else {
+                                // 如果无法提取日期范围，尝试直接显示文件名（去除扩展名）
+                                displayName = filename.replace('.xlsx', '');
+                            }
+                            
+                            return {
+                                name: filename,
+                                displayName: displayName,
+                                path: href
+                            };
+                        });
+                        
+                        // 按文件名排序（假设文件名包含日期信息）
+                        files.sort((a, b) => {
+                            return b.name.localeCompare(a.name);
+                        });
+                        
+                        console.log('排序后的文件列表:', files);
+                        
+                        // 清空容器
+                        historicalReportsContainer.innerHTML = '';
+                        
+                        // 生成历史周报列表
+                        console.log('开始生成历史周报列表...');
+                        files.forEach(file => {
+                            console.log('添加文件:', file.name, '显示名称:', file.displayName);
+                            const link = document.createElement('a');
+                            link.href = '#';
+                            link.onclick = function() {
+                                downloadReport(file.path, file.name);
+                                return false;
+                            };
+                            link.style = 'color: black; padding: 12px 16px; text-decoration: none; display: block;';
+                            link.textContent = file.displayName;
+                            historicalReportsContainer.appendChild(link);
+                            console.log('文件添加成功:', file.name, '显示名称:', file.displayName);
+                        });
+                        console.log('历史周报列表生成完成，共添加', files.length, '个文件');
+                        console.log('historicalReportsContainer内容:', historicalReportsContainer.innerHTML);
+                    })
+                    .catch(error => {
+                        console.error('加载历史周报失败:', error);
+                        historicalReportsContainer.innerHTML = '<p style="padding: 12px 16px; color: #666; margin: 0;">加载失败: '+error.message+'</p>';
+                    });
+            }
+            
+            // 下载指定的周报文件
+            function downloadReport(path, filename) {
+                // 直接使用完整路径
+                const downloadUrl = path;
+                console.log('下载文件:', filename, '路径:', downloadUrl);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 关闭下拉菜单
+                document.getElementById('weeklyReportDropdown').style.display = 'none';
+            }
+            
+            // 下载最新周报函数
+            window.downloadLatestWeeklyReport = function() {
+                const reportDirectory = '/week_report/';
+                
+                // 尝试获取最新的周报文件
+                fetch(reportDirectory)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('无法访问周报目录+'+reportDirectory);
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        // 解析HTML内容，查找所有Excel文件链接
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const links = doc.querySelectorAll('a[href$=".xlsx"]');
+                        
+                        if (links.length === 0) {
+                            alert('周报目录中没有找到Excel文件');
+                            return;
+                        }
+                        
+                        // 提取文件名并按日期排序
+                        const files = Array.from(links).map(link => {
+                            let href = link.getAttribute('href');
+                            // 确保路径包含 /week_report/ 前缀
+                            if (!href.startsWith('/week_report/')) {
+                                href = '/week_report/' + href;
+                            }
+                            const filename = href.split('/').pop();
+                            return {
+                                name: filename,
+                                path: href
+                            };
+                        });
+                        
+                        // 按文件名排序（假设文件名包含日期信息）
+                        files.sort((a, b) => {
+                            return b.name.localeCompare(a.name);
+                        });
+                        
+                        // 获取最新的文件
+                        const latestFile = files[0];
+                        
+                        // 下载最新文件
+                        downloadReport(latestFile.path, latestFile.name);
+                    })
+                    .catch(error => {
+                        console.error('下载周报失败:', error);
+                        alert('下载周报失败，请检查周报目录是否存在');
+                    });
+            };
+            
+            // ========== 预加载所有电厂数据 ==========
+            console.log('开始预加载所有电厂数据...');
+            
+            // 所有电厂列表
+            const allPlants = ['kemen', 'shaowu', 'yongan', 'zhangping'];
+            
+            // 同时加载所有电厂数据
+            allPlants.forEach(plant => {
+                loadPlantDecisionData(plant);
+            });
+            
+            console.log('DOMContentLoaded执行完成');
+        });
+        
+        // ==================== 页面显示函数 ====================
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(function(page) {
+                page.style.display = 'none';
+            });
+            
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                
+                const datePickerId = 'datePicker-' + pageId;
+                const datePicker = document.getElementById(datePickerId);
+                if (datePicker && currentSelectedDate) {
+                    datePicker.value = currentSelectedDate;
+                }
+                
+                const firstCoalButton = targetPage.querySelector('.coal-button[data-type]');
+                if (firstCoalButton) {
+                    const activePlantButton = targetPage.querySelector('.coal-button[data-page="' + pageId + '"][data-type].active');
+                    if (!activePlantButton) {
+                        const samePageButtons = targetPage.querySelectorAll('.coal-button[data-page="' + pageId + '"][data-type]');
+                        samePageButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                        firstCoalButton.classList.add('active');
+                        currentType = firstCoalButton.getAttribute('data-type');
+                        
+                        if (pageId === 'decision-model') {
+                            currentPlant = currentType;
+                            if (!decisionData[currentPlant]) {
+                                loadPlantDecisionData(currentPlant);
+                            } else {
+                                updateDecisionPageUI(currentPlant);
+                            }
+                        }
+                    } else {
+                        currentType = activePlantButton.getAttribute('data-type');
+                        if (pageId === 'decision-model') {
+                            currentPlant = currentType;
+                        }
+                    }
+                } else {
+                    if (pageId === 'domestic-freight') {
+                        currentType = 'insideinfer';
+                    } else if (pageId === 'international-freight') {
+                        currentType = 'outsideinfer';
+                    } else if (pageId === 'decision-model') {
+                        currentType = 'decision-model';
+                    }
+                }
+                
+                const activeRangeButton = targetPage.querySelector('.range-button.active');
+                if (!activeRangeButton) {
+                    const rangeButton10 = targetPage.querySelector('.range-button[data-days="10"]');
+                    const firstRangeButton = rangeButton10 || targetPage.querySelector('.range-button');
+                    if (firstRangeButton) {
+                        const samePageButtons = targetPage.querySelectorAll('.range-button');
+                        samePageButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                        firstRangeButton.classList.add('active');
+                        currentDays = parseInt(firstRangeButton.getAttribute('data-days'));
+                    }
+                }
+                
+                if (pageId === 'power-generation') {
+                    const activeUnitButton = targetPage.querySelector('.coal-button[data-unit].active');
+                    if (!activeUnitButton) {
+                        const unitButtons = targetPage.querySelectorAll('.coal-button[data-unit]');
+                        unitButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                        const totalButton = targetPage.querySelector('.coal-button[data-unit="total"]');
+                        if (totalButton) {
+                            totalButton.classList.add('active');
+                        }
+                    }
+                }
+                
+                loadChart(pageId, currentType, currentDays);
+            }
+        }
+        
+        // ==================== 决策数据加载函数 ====================
+        // 加载机组列表到下拉菜单
+        function loadUnitList(plantType) {
+            // 定义每个电厂的机组列表
+            const plantUnits = {
+                'kemen': ['unit1', 'unit2', 'unit3', 'unit4', 'unit5', 'unit6'],
+                'shaowu': ['unit3', 'unit4'],
+                'yongan': ['unit7', 'unit8'],
+                'zhangping': ['unit5', 'unit6']
+            };
+            
+            const units = plantUnits[plantType] || [];
+            const dropdown = document.getElementById('unit-dropdown');
+            
+            if (dropdown) {
+                // 清空下拉菜单
+                dropdown.innerHTML = '';
+                
+                // 添加机组选项
+                units.forEach(unit => {
+                    const option = document.createElement('option');
+                    option.value = unit;
+                    //option.textContent = unit;
+                    option.textContent = '机组' + unit.replace('unit', '');
+                    dropdown.appendChild(option);
+                });
+                
+                // 默认选择第一个机组
+                if (units.length > 0) {
+                    dropdown.value = units[0];
+                }
+                
+                // 添加选择事件
+                dropdown.onchange = function() {
+                    const activePlantButton = document.querySelector('.coal-button[data-page="power-generation"][data-type].active');
+                    if (activePlantButton) {
+                        const plantType = activePlantButton.getAttribute('data-type');
+                        loadChart('power-generation', plantType, currentDays, true);
+                    }
+                };
+            }
+        }
+        
+        // 当前选中的决策ID
+        var currentDecisionId = null;
+        
+        // 从数据库API加载决策历史列表
+        function loadDecisionHistory(plantType) {
+            const apiUrl = 'http://10.73.56.38:8081/api/decision_history?plant=' + plantType;
+            
+            fetch(apiUrl)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('API请求失败');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    const dropdown = document.getElementById('decision-history-dropdown');
+                    if (!dropdown) return;
+                    
+                    // 清空下拉框
+                    dropdown.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        dropdown.innerHTML = '<option value="">暂无决策数据</option>';
+                        return;
+                    }
+                    
+                    // 添加选项
+                    data.forEach(function(decision) {
+                        const option = document.createElement('option');
+                        option.value = decision.id;
+                        option.textContent = decision.decision_date + ' - ' + decision.plant_name + 
+                            ' (总量: ' + formatNumber(decision.total_purchase_quantity) + '吨)';
+                        dropdown.appendChild(option);
+                    });
+                    
+                    // 默认选择最新的决策
+                    if (data.length > 0) {
+                        dropdown.value = data[0].id;
+                        currentDecisionId = data[0].id;
+                        loadDecisionDetail(data[0].id);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('加载决策历史失败:', error);
+                    const dropdown = document.getElementById('decision-history-dropdown');
+                    if (dropdown) {
+                        dropdown.innerHTML = '<option value="">加载失败</option>';
+                    }
+                    // 回退到JSON文件加载
+                    loadPlantDecisionDataFromJSON(plantType);
+                });
+        }
+        
+        // 从数据库API加载单个决策详情
+        function loadDecisionDetail(decisionId) {
+            const apiUrl = 'http://10.73.56.38:8081/api/decision_history/' + decisionId;
+            
+            fetch(apiUrl)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('API请求失败');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // 将数据转换为与JSON格式兼容的结构
+                    const formattedData = {
+                        decision_date: data.decision_date,
+                        is_emergency: data.is_emergency,
+                        duration_days: data.duration_days,
+                        total_purchase_quantity: data.total_purchase_quantity,
+                        decision_analysis: data.decision_analysis,
+                        procurement_plan: data.procurement_plan
+                    };
+                    
+                    decisionData[currentPlant] = formattedData;
+                    updateDecisionPageUI(currentPlant);
+                    loadChart('decision-model', currentPlant, currentDays);
+                    
+                    // 更新决策信息显示
+                    const infoSpan = document.getElementById('decision-info');
+                    if (infoSpan) {
+                        infoSpan.textContent = '持续' + data.duration_days + '天 | ' + 
+                            (data.is_emergency ? '紧急决策' : '常规决策');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('加载决策详情失败:', error);
+                });
+        }
+        
+        // 从JSON文件加载决策数据（备用方案）
+        function loadPlantDecisionDataFromJSON(plantType) {
+            const filePath = jsonConfig.basePath + jsonConfig.files[plantType];
+            const timestamp = new Date().getTime();
+            const urlWithTimestamp = filePath + '?t=' + timestamp;
+            
+            fetch(urlWithTimestamp, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`文件不存在: ${jsonConfig.files[plantType]}`);
+                    }
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data) {
+                    throw new Error(plantNameMap[plantType] + '数据为空');
+                }
+                
+                // 验证数据格式
+                if (!data.procurement_plan || !Array.isArray(data.procurement_plan)) {
+                    throw new Error('数据格式错误');
+                }
+                
+                decisionData[plantType] = data;
+                
+                // 更新决策历史下拉框（模拟）
+                const dropdown = document.getElementById('decision-history-dropdown');
+                if (dropdown) {
+                    dropdown.innerHTML = '<option value="json">' + data.decision_date + ' - ' + 
+                        plantNameMap[plantType] + ' (JSON数据)</option>';
+                }
+                
+                // 如果当前选中是这个电厂且页面是采需决策页面，更新UI
+                if (currentPlant === plantType) {
+                    const activePage = document.querySelector('.page-content[style*="display: block"]');
+                    if (activePage && activePage.id === 'decision-model-page') {
+                        updateDecisionPageUI(plantType);
+                        loadChart('decision-model', plantType, currentDays);
+                    }
+                }
+            })
+            .catch(error => {
+                // 加载失败时使用默认数据
+                if (defaultDecisionData[plantType]) {
+                    decisionData[plantType] = defaultDecisionData[plantType];
+                    
+                    if (currentPlant === plantType) {
+                        const activePage = document.querySelector('.page-content[style*="display: block"]');
+                        if (activePage && activePage.id === 'decision-model-page') {
+                            updateDecisionPageUI(plantType);
+                            loadChart('decision-model', plantType, currentDays);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 主函数：加载电厂决策数据
+        function loadPlantDecisionData(plantType) {
+            // 优先从数据库API加载
+            loadDecisionHistory(plantType);
+        }
+        
+        // ==================== 更新决策页面UI ====================
+        function updateDecisionPageUI(plantType) {
+            const data = decisionData[plantType];
+            if (!data) {
+                console.warn(plantNameMap[plantType] + '决策数据不存在');
+                return;
+            }
+            
+            const decisionDateElement = document.getElementById('decision-date');
+            if (decisionDateElement) {
+                decisionDateElement.textContent = data.decision_date || '未知日期';
+            }
+            
+            const totalQuantityElement = document.getElementById('total-purchase-quantity');
+            if (totalQuantityElement) {
+                totalQuantityElement.textContent = formatNumber(data.total_purchase_quantity);
+            }
+            
+            populateCycleData(plantType);
+            generateDecisionTextFromData(plantType);
+        }
+        
+        // ==================== 显示数据加载错误 ====================
+        function showPlantDataError(plantType, errorMessage) {
+            if (currentPlant === plantType) {
+                const errorHTML = `
+                    <div style="padding: 20px; text-align: center; background: #fff3f3; border: 2px solid #ff6b6b; border-radius: 8px; margin: 20px 0;">
+                        <h4 style="color: #d32f2f; margin-bottom: 10px;">❌ 加载${plantNameMap[plantType]}数据失败</h4>
+                        <p style="color: #d32f2f;">${errorMessage}</p>
+                        <p style="color: #666; margin-top: 10px;">请检查文件路径: ${jsonConfig.basePath}${jsonConfig.files[plantType]}</p>
+                    </div>
+                `;
+                
+                const decisionTextElement = document.getElementById('decision-text');
+                if (decisionTextElement) {
+                    decisionTextElement.innerHTML = errorHTML;
+                }
+            }
+        }
+        
+        // ==================== 格式化数字（千位分隔符） ====================
+        function formatNumber(value) {
+            if (value === undefined || value === null) {
+                return '0.00';
+            }
+            
+            if (typeof value !== 'number') {
+                value = parseFloat(value);
+                if (isNaN(value)) {
+                    return '0.00';
+                }
+            }
+            
+            return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        
+        // ==================== 填充采购详情表格（按日期分组） ====================
+        function populateCycleData(plantType) {
+            const data = decisionData[plantType];
+            if (!data || !data.procurement_plan) {
+                console.warn(plantNameMap[plantType] + '决策数据或采购计划不存在');
+                return;
+            }
+            
+            if (!Array.isArray(data.procurement_plan)) {
+                console.warn(plantNameMap[plantType] + '采购计划不是数组格式');
+                return;
+            }
+            
+            // 添加煤种名称映射
+            const coalNameMap = {
+                'CCI4500': '北方港4500',
+                'CCI5000': '北方港5000', 
+                'CCI5500': '北方港5500',
+                'CCI进口3800': '进口3800',
+                'CCI进口4700': '进口4700',
+                'CCI进口5500': '进口5500',
+            };
+            
+            // 获取容器元素
+            const container = document.getElementById('purchase-details-container');
+            if (!container) return;
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            // 按采购日期对采购项目进行分组
+            const itemsByDate = {};
+            
+            // 遍历所有采购计划周期
+            data.procurement_plan.forEach(cycle => {
+                if (cycle && cycle.items && Array.isArray(cycle.items)) {
+                    const purchaseDate = cycle.date || '未知日期';
+                    
+                    // 如果该日期还没有分组，创建一个新数组
+                    if (!itemsByDate[purchaseDate]) {
+                        itemsByDate[purchaseDate] = [];
+                    }
+                    
+                    // 将该周期的所有采购项目添加到对应日期的分组中
+                    cycle.items.forEach(item => {
+                        if (item) {
+                            itemsByDate[purchaseDate].push(item);
+                        }
+                    });
+                }
+            });
+            
+            // 如果没有采购项目
+            const allDates = Object.keys(itemsByDate);
+            if (allDates.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: orange; padding: 20px;">暂无采购项目数据</div>';
+                return;
+            }
+            
+            // 按日期排序
+            allDates.sort((a, b) => {
+                return new Date(a) - new Date(b);
+            });
+            
+            // 为每个采购日期创建独立的表格
+            allDates.forEach(date => {
+                const items = itemsByDate[date];
+                if (!items || items.length === 0) return;
+                
+                // 计算该日期的总采购量
+                const totalQuantity = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                // 如果总采购量为0，跳过该日期
+                if (totalQuantity === 0) {
+                    return;
+                }
+                
+                // 创建日期分组容器
+                const dateContainer = document.createElement('div');
+                dateContainer.style.marginBottom = '30px';
+                dateContainer.style.padding = '20px';
+                dateContainer.style.backgroundColor = '#ffffff';
+                dateContainer.style.borderRadius = '10px';
+                dateContainer.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                
+                // 创建日期标题
+                const dateTitle = document.createElement('h4');
+                dateTitle.style.fontSize = '18px';
+                dateTitle.style.fontWeight = 'bold';
+                dateTitle.style.color = '#1a56db';
+                dateTitle.style.marginBottom = '15px';
+                dateTitle.style.paddingBottom = '8px';
+                dateTitle.style.borderBottom = '2px solid #e0e7ff';
+                dateTitle.innerHTML = `定标日: ${date} - 总采购量: ${formatNumber(totalQuantity)} 吨`;
+                
+                // 创建表格
+                const table = document.createElement('table');
+                table.className = 'data-table';
+                
+                // 创建表头
+                const thead = document.createElement('thead');
+                thead.innerHTML = `
+                    <tr>
+                        <th>煤种</th>
+                        <th>采购数量(吨)</th>
+                        <th>预测煤价(元/吨)</th>
+                        <th>运费(元/吨)</th>
+                        <th>到厂成本(元/吨)</th>
+                        <th>最迟到厂日期</th>
+                    </tr>
+                `;
+                
+                // 创建表体
+                const tbody = document.createElement('tbody');
+                
+                // 填充表格数据
+                items.forEach(item => {
+                    if (!item) return;
+                    
+                    const row = document.createElement('tr');
+                    const quantity = item.quantity || 0;
+                    const displayQuantity = formatNumber(quantity);
+                    
+                    // 使用映射后的煤种名称
+                    const originalCoalName = item.coal_name || '未知煤种';
+                    const displayCoalName = coalNameMap[originalCoalName] || originalCoalName;
+                    
+                    row.innerHTML = `
+                        <td>${displayCoalName}</td>
+                        <td>${displayQuantity}</td>
+                        <td>${item.coal_price ? item.coal_price.toFixed(2) : '0.00'}</td>
+                        <td>${item.freight ? item.freight.toFixed(2) : '0.00'}</td>
+                        <td>${item.delivered_unit_cost ? item.delivered_unit_cost.toFixed(2) : '0.00'}</td>
+                        <td>${item.latest_delivery_date && item.latest_delivery_date !== '0' ? item.latest_delivery_date : '待定'}</td>
+                    `;
+                    
+                    if (quantity === 0) {
+                        row.style.opacity = '0.6';
+                        row.style.backgroundColor = '#f5f5f5';
+                    }
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // 组装表格
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                
+                // 组装日期分组容器
+                dateContainer.appendChild(dateTitle);
+                dateContainer.appendChild(table);
+                
+                // 将日期分组容器添加到主容器中
+                container.appendChild(dateContainer);
+            });
+        }
+        
+        // ==================== 获取决策分析 ====================
+        function generateDecisionTextFromData(plantType) {
+            const data = decisionData[plantType];
+            if (!data) return;
+            
+            const decisionTextElement = document.getElementById('decision-text');
+            if (!decisionTextElement) return;
+            
+            // 直接从JSON文件中读取决策分析文本
+            const decisionAnalysis = data.decision_analysis || '暂无决策分析数据';
+            
+            // 将文本中的换行符替换为HTML的<br>标签
+            //decisionAnalysis = decisionAnalysis.replace(/\n/g, '<br>');
+
+            // 设置决策文字内容
+            //decisionTextElement.innerHTML = `<p style="white-space: pre-line;">${decisionAnalysis}</p>`;
+            // 设置决策文字内容，使用pre-line保留换行符，并添加字体样式
+            //decisionTextElement.innerHTML = `<p style="font-family: 'Microsoft YaHei', Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.8; text-align: justify; padding: 10px;">${decisionAnalysis}</p>`;
+            // 直接使用white-space: pre-line保留原有的换行和空格
+            decisionTextElement.innerHTML = `<p style="
+                font-family: 'Microsoft YaHei', Arial, sans-serif; 
+                font-size: 18px; 
+                color: #333; 
+                line-height: 1.8; 
+                text-align: justify; 
+                padding: 10px;
+                white-space: pre-line;  /* 保留换行符，合并多个空格 */
+                margin: 0;
+            ">${decisionAnalysis}</p>`;
+        }
+        
+        // ==================== 加载图表 ====================
+        function loadChart(pageId, type = null, days = 5, forceReload = false) {
+            if (typeof echarts === 'undefined') {
+                console.error('ECharts library is not loaded!');
+                return;
+            }
+            
+            const chartContainerId = 'chart-' + pageId;
+            const chartContainer = document.getElementById(chartContainerId);
+            if (!chartContainer) return;
+            
+            const existingChart = echarts.getInstanceByDom(chartContainer);
+            if (existingChart) {
+                existingChart.dispose();
+            }
+            
+            const myChart = echarts.init(chartContainer);
+            
+            if (pageId === 'decision-model') {
+                const plantType = type || currentPlant;
+                
+                if (!decisionData[plantType]) {
+                    myChart.showLoading({
+                        text: '加载决策数据中...',
+                        color: '#1a56db',
+                        textColor: '#4b5563',
+                        maskColor: 'rgba(255, 255, 255, 0.8)',
+                        zlevel: 0
+                    });
+                    return;
+                }
+                
+                myChart.hideLoading();
+                
+                const data = decisionData[plantType];
+                
+                if (!data.procurement_plan || !Array.isArray(data.procurement_plan)) {
+                    myChart.setOption({
+                        title: {
+                            text: '采购计划数据格式错误',
+                            textStyle: { color: 'red', fontSize: 16 }
+                        }
+                    });
+                    return;
+                }
+                
+                const categories = data.procurement_plan.map(cycle => 
+                    cycle.date || '未知日期'
+                );
+                
+                const seriesData = data.procurement_plan.map(cycle => 
+                    cycle.total_quantity || 0
+                );
+                
+                const option = {
+                    backgroundColor: 'transparent',
+                    title: {
+                        text: plantNameMap[plantType] + '推荐采购数量分析',
+                        left: 'center',
+                        textStyle: {
+                            color: '#1a56db',
+                            fontSize: 18,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#1a56db',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        textStyle: {
+                            color: '#333',
+                            fontSize: 14
+                        },
+                        padding: 12,
+                        formatter: function(params) {
+                            let result = params[0].name + '<br/>';
+                            params.forEach(function(item) {
+                                let displayValue = formatNumber(item.value);
+                                result += item.marker + item.seriesName + ': ' + displayValue + ' 吨<br/>';
+                            });
+                            return result;
+                        }
+                    },
+                    legend: {
+                        data: [plantNameMap[plantType] + ' - 采购量'],
+                        top: 30,
+                        textStyle: {
+                            color: '#4b5563'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        top: '15%',
+                        containLabel: true
+                    },
+                    dataZoom: [
+                        {
+                            type: 'slider',
+                            xAxisIndex: 0,
+                            start: 0,
+                            end: 100
+                        },
+                        {
+                            type: 'inside',
+                            xAxisIndex: 0,
+                            start: 0,
+                            end: 100
+                        }
+                    ],
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: categories,
+                        axisLine: {
+                            lineStyle: {
+                                color: '#1a56db',
+                                width: 2
+                            }
+                        },
+                        axisLabel: {
+                            color: '#4b5563',
+                            rotate: 0,
+                            fontSize: 12
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#e0e7ff'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '采购数量（吨）',
+                        nameTextStyle: {
+                            color: '#4b5563',
+                            fontSize: 12
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#1a56db',
+                                width: 2
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#e0e7ff',
+                                type: 'dashed'
+                            }
+                        },
+                        axisLabel: {
+                            color: '#4b5563',
+                            fontSize: 12,
+                            formatter: function(value) {
+                                if (value >= 1000000) {
+                                    return (value / 1000000).toFixed(1) + 'M';
+                                } else if (value >= 1000) {
+                                    return (value / 1000).toFixed(0) + 'K';
+                                }
+                                return value;
+                            }
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#e0e7ff'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: plantNameMap[plantType] + ' - 采购量',
+                        type: 'bar',
+                        data: seriesData,
+                        itemStyle: {
+                            color: function(params) {
+                                const colors = ['#2962FF', '#4361EE', '#3A0CA3', '#7209B7'];
+                                return colors[params.dataIndex % colors.length];
+                            },
+                            borderRadius: [8, 8, 0, 0]
+                        },
+                        barWidth: '40%',
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 15,
+                                shadowColor: 'rgba(41, 98, 255, 0.8)'
+                            },
+                            focus: 'series'
+                        },
+                        animation: true,
+                        animationDuration: 1500,
+                        animationEasing: 'cubicOut',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            formatter: function(params) {
+                                return formatNumber(params.value);
+                            },
+                            color: '#1a56db',
+                            fontWeight: 'bold',
+                            fontSize: 12
+                        }
+                    }]
+                };
+                
+                myChart.setOption(option);
+                
+                window.addEventListener('resize', function() {
+                    myChart.resize();
+                });
+                
+                return;
+            }
+            
+            // 其他页面的图表加载代码（国内煤价、国际煤价、运费、发电量）
+            // 从API加载预测数据
+            function loadPredictionData(type, days, date, unit = 'total') {
+                const formattedDate = date.toISOString().split('T')[0];
+                
+                if (type === 'kemen' || type === 'shaowu' || type === 'yongan' || type === 'zhangping') {
+                    const apiUrl = 'http://10.73.56.38:8081/api/elec_prediction?type=' + type + '&days=' + days + '&infer_date=' + formattedDate + '&unit=' + unit;
+                    return fetch(apiUrl)
+                        .then(function(response) {
+                            if (!response.ok) {
+                                throw new Error('API请求失败');
+                            }
+                            return response.json();
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading prediction data:', error);
+                            return [];
+                        });
+                } else {
+                    const apiUrl = 'http://10.73.56.38:8081/api/prediction?type=' + type + '&days=' + days + '&date=' + formattedDate;
+                    return fetch(apiUrl)
+                        .then(function(response) {
+                            if (!response.ok) {
+                                throw new Error('API请求失败');
+                            }
+                            return response.json();
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading prediction data:', error);
+                            return [];
+                        });
+                }
+            }
+            
+            function loadRealData(realType, days, date, unit = 'total') {
+                const formattedDate = date.toISOString().split('T')[0];
+                
+                if (realType === 'kemen_power' || realType === 'shaowu_power' || realType === 'yongan_power' || realType === 'zhangping_power') {
+                    const apiUrl = 'http://10.73.56.38:8081/api/elec_real_data?type=' + realType + '&days=' + days + '&start_date=' + formattedDate + '&unit=' + unit;
+                    return fetch(apiUrl)
+                        .then(function(response) {
+                            if (!response.ok) {
+                                throw new Error('API请求失败');
+                            }
+                            return response.json();
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading real data:', error);
+                            return [];
+                        });
+                } else {
+                    const apiUrl = 'http://10.73.56.38:8081/api/real_data?type=' + realType + '&days=' + days + '&date=' + formattedDate;
+                    return fetch(apiUrl)
+                        .then(function(response) {
+                            if (!response.ok) {
+                                throw new Error('API请求失败');
+                            }
+                            return response.json();
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading real data:', error);
+                            return [];
+                        });
+                }
+            }
+            
+            function loadHistoricalRealData(realType, days, date) {
+                // 计算一个较早的日期作为起始日期，以获取历史数据
+                const historicalDate = new Date(date);
+                historicalDate.setDate(historicalDate.getDate() - 40); // 往前推100天，确保有足够的历史数据
+                const formattedDate = historicalDate.toISOString().split('T')[0];
+                
+                const apiUrl = 'http://10.73.56.38:8081/api/real_data?type=' + realType + '&days=' + days + '&date=' + formattedDate;
+                return fetch(apiUrl)
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('API请求失败');
+                        }
+                        return response.json();
+                    })
+                    .catch(function(error) {
+                        console.error('Error loading historical real data:', error);
+                        return [];
+                    });
+            }
+            
+            function getRealDataType(predType) {
+                const mapping = {
+                    'CCI3800outinfer': 'CCI3800out',
+                    'CCI4500infer': 'CCI4500',
+                    'CCI4700outinfer': 'CCI4700out',
+                    'CCI5000infer': 'CCI5000',
+                    'CCI5500infer': 'CCI5500',
+                    'CCI5500outinfer': 'CCI5500out',
+                    'insideinfer': 'inside_freight',
+                    'outsideinfer': 'outside_freight',
+                    'kemen': 'kemen_power',
+                    'shaowu': 'shaowu_power',
+                    'yongan': 'yongan_power',
+                    'zhangping': 'zhangping_power'
+                };
+                return mapping[predType] || predType;
+            }
+            
+            let selectedDate = new Date();
+            if (pageId !== 'decision-model') {
+                const datePickerId = 'datePicker-' + pageId;
+                const datePicker = document.getElementById(datePickerId);
+                if (datePicker && datePicker.value) {
+                    selectedDate = new Date(datePicker.value);
+                }
+            }
+            
+            if (!type) {
+                const activeButton = document.querySelector('.coal-button[data-page="' + pageId + '"].active');
+                type = activeButton ? activeButton.getAttribute('data-type') : null;
+            }
+            
+            if (!type && (pageId === 'domestic-freight' || pageId === 'international-freight')) {
+                if (pageId === 'domestic-freight') {
+                    type = 'insideinfer';
+                } else if (pageId === 'international-freight') {
+                    type = 'outsideinfer';
+                }
+            }
+            
+            const realType = getRealDataType(type);
+            let currentUnit = 'total';
+            if (pageId === 'power-generation') {
+                const activeUnitButton = document.querySelector('.coal-button[data-page="power-generation"][data-unit].active');
+                currentUnit = activeUnitButton ? activeUnitButton.getAttribute('data-unit') : 'total';
+            }
+            
+            // 为月均价计算获取历史真实数据
+            const historicalDataPromise = loadHistoricalRealData(realType, 30, selectedDate);
+            
+            Promise.all([
+                loadPredictionData(type, days, selectedDate, currentUnit),
+                loadRealData(realType, days, selectedDate, currentUnit),
+                historicalDataPromise
+            ]).then(function([predData, realData, historicalData]) {
+                let data;
+                
+                if (pageId === 'domestic-coal' || pageId === 'international-coal' || pageId === 'power-generation') {
+                    if (pageId === 'power-generation') {
+                        let plantName;
+                        if (type === 'kemen') plantName = '可门电厂';
+                        else if (type === 'shaowu') plantName = '邵武电厂';
+                        else if (type === 'yongan') plantName = '永安电厂';
+                        else plantName = '漳平电厂';
+                        
+                        const activeUnitButton = document.querySelector('.coal-button[data-page="power-generation"][data-unit].active');
+                        const currentUnit = activeUnitButton ? activeUnitButton.getAttribute('data-unit') : 'total';
+                        
+                        if (currentUnit === 'units') {
+                            // 获取选中的机组
+                            const selectedUnit = document.getElementById('unit-dropdown') ? document.getElementById('unit-dropdown').value : null;
+                            
+                            const categories = predData.map(function(item) {
+                                const date = new Date(item.date);
+                                return date.format('m-d');
+                            });
+                            
+                            const plantColorSchemes = {
+                                'kemen': ['#2962FF', '#00E5FF', '#F72585', '#4CC9F0', '#7209B7', '#3A0CA3', '#FF6B6B', '#FFA500'],
+                                'shaowu': ['#FF6B6B', '#FFA500', '#FF5722'],
+                                'yongan': ['#9C27B0', '#E65100', '#FF9800'],
+                                'zhangping': ['#00BCD4', '#009688', '#4CAF50']
+                            };
+                            const colors = plantColorSchemes[type] || ['#2962FF', '#00E5FF', '#F72585', '#4CC9F0', '#7209B7', '#3A0CA3'];
+                            
+                            const series = [];
+                            
+                            // 只为选中的机组创建series
+                            if (selectedUnit) {
+                                // 预测数据
+                                const unitData = predData.map(function(item) {
+                                    return item[selectedUnit] || null;
+                                });
+                                
+                                series.push({
+                                    //name: plantName + ' - ' + selectedUnit + ' (预测)',
+                                    name: plantName + ' - 机组' + selectedUnit.replace('unit', '') + ' (预测)',
+                                    data: unitData,
+                                    color: colors[0],
+                                    lineStyle: {
+                                        type: 'solid'
+                                    }
+                                });
+                                
+                                // 真实数据
+                                if (realData && realData.length > 0) {
+                                    const realUnitData = [];
+                                    for (let i = 0; i < categories.length; i++) {
+                                        const currentDate = predData[i].date;
+                                        const realDataItem = realData.find(item => item.date === currentDate);
+                                        if (realDataItem && realDataItem[selectedUnit] !== undefined) {
+                                            realUnitData.push(realDataItem[selectedUnit]);
+                                        } else {
+                                            realUnitData.push(null);
+                                        }
+                                    }
+                                    
+                                    series.push({
+                                        //name: plantName + ' - ' + selectedUnit + ' (真实)',
+                                        name: plantName + ' - 机组' + selectedUnit.replace('unit', '') + ' (真实)',
+
+                                        data: realUnitData,
+                                        color: colors[0],
+                                        lineStyle: {
+                                            type: 'dashed'
+                                        }
+                                    });
+                                }
+                            }
+                            
+                            data = {
+                                categories: categories,
+                                series: series
+                            };
+                        } else {
+                            const predValues = predData.map(function(item) {
+                                return item.predict;
+                            });
+                            const predCategories = predData.map(function(item) {
+                                const date = new Date(item.date);
+                                return date.format('m-d');
+                            });
+                            
+                            if (!Array.isArray(realData)) {
+                                realData = [];
+                            }
+                            
+                            const categories = predCategories;
+                            
+                            const adjustedRealValues = [];
+                            for (let i = 0; i < categories.length; i++) {
+                                const currentDate = predData[i].date;
+                                const realDataItem = realData.find(item => item.date === currentDate);
+                                if (realDataItem) {
+                                    adjustedRealValues.push(realDataItem.value);
+                                } else {
+                                    adjustedRealValues.push(null);
+                                }
+                            }
+                            
+                            data = {
+                                categories: categories,
+                                series: [
+                                    {
+                                        name: plantName + ' (预测)',
+                                        data: predValues
+                                    },
+                                    {
+                                        name: plantName + ' (真实)',
+                                        data: adjustedRealValues,
+                                        lineStyle: {
+                                            type: 'dashed'
+                                        }
+                                    }
+                                ]
+                            };
+                        }
+                    } else {
+                                                // 处理国内煤价和国际煤价数据
+                        if (!Array.isArray(realData)) {
+                            realData = [];
+                        }
+                        
+                        // 处理预测数据
+                        const predValues = predData.map(function(item) {
+                            return item.predict;
+                        });
+                        const predCategories = predData.map(function(item) {
+                            const date = new Date(item.date);
+                            return date.format('m-d');
+                        });
+                        
+                        // 确定系列名称
+                        let seriesName = type;
+                        if (type === 'CCI4500infer') seriesName = 'CCI4500';
+                        else if (type === 'CCI5000infer') seriesName = 'CCI5000';
+                        else if (type === 'CCI5500infer') seriesName = 'CCI5500';
+                        else if (type === 'CCI3800outinfer') seriesName = '进口CCI3800';
+                        else if (type === 'CCI4700outinfer') seriesName = '进口CCI4700';
+                        else if (type === 'CCI5500outinfer') seriesName = '进口CCI5500';
+                        
+                        // 计算基准周均价（选择日期之前5个指数日的真实值）
+                        let baseWeekAvg = 0;
+                        if (historicalData.length > 0) {
+                            // 过滤掉选择日期之后的数据，只保留之前的真实数据
+                            const selectedDateStr = selectedDate.toISOString().split('T')[0];
+                            const filteredHistoricalData = historicalData.filter(item => item.date < selectedDateStr);
+                            
+                            console.log('过滤后的历史数据数量：', filteredHistoricalData.length);
+                            
+                            if (filteredHistoricalData.length >= 5) {
+                                // 按日期排序历史数据（降序）
+                                const sortedHistoricalData = [...filteredHistoricalData].sort((a, b) => new Date(b.date) - new Date(a.date));
+                                // 取最近的5个真实值
+                                const baseWeekData = sortedHistoricalData.slice(0, 5);
+                                const baseWeekValues = baseWeekData.map(item => item.value);
+                                baseWeekAvg = baseWeekValues.reduce((sum, val) => sum + val, 0) / baseWeekValues.length;
+                                
+                                // 打印调试信息
+                                console.log('当前选择的日期：', selectedDateStr);
+                                console.log('基准周均价计算使用的数据：');
+                                baseWeekData.forEach(item => {
+                                    console.log(`${item.date}: ${item.value}`);
+                                });
+                                console.log('基准周均价：', baseWeekAvg);
+                            } else {
+                                console.log('历史数据不足5个，无法计算基准周均价');
+                            }
+                        }
+                        
+                        // 计算未来四周的均值（每周5天）
+                        let futureWeeksTrend = [];
+                        
+                        // 第一周（当天及其之后4天，共5天）
+                        if (predValues.length >= 5) {
+                            const week1Values = predValues.slice(0, 5);
+                            if (week1Values.length === 5) {
+                                const week1Avg = week1Values.reduce((sum, val) => sum + val, 0) / week1Values.length;
+                                let trend;
+                                if (week1Avg > baseWeekAvg * 1.01) {
+                                    trend = '上涨';
+                                } else if (week1Avg < baseWeekAvg * 0.99) {
+                                    trend = '下跌';
+                                } else {
+                                    trend = '持平';
+                                }
+                                futureWeeksTrend.push(`第1周: ${trend} (${week1Avg.toFixed(1)})`);
+                            }
+                        }
+                        
+                        // 第二周（接下来5天，共5天）
+                        if (predValues.length >= 10) {
+                            const week2Values = predValues.slice(5, 10);
+                            if (week2Values.length === 5) {
+                                const week2Avg = week2Values.reduce((sum, val) => sum + val, 0) / week2Values.length;
+                                let trend;
+                                if (week2Avg > baseWeekAvg * 1.01) {
+                                    trend = '上涨';
+                                } else if (week2Avg < baseWeekAvg * 0.99) {
+                                    trend = '下跌';
+                                } else {
+                                    trend = '持平';
+                                }
+                                futureWeeksTrend.push(`第2周: ${trend} (${week2Avg.toFixed(1)})`);
+                            }
+                        }
+                        
+                        // 第三周（接下来5天，共5天）
+                        if (predValues.length >= 15) {
+                            const week3Values = predValues.slice(10, 15);
+                            if (week3Values.length === 5) {
+                                const week3Avg = week3Values.reduce((sum, val) => sum + val, 0) / week3Values.length;
+                                let trend;
+                                if (week3Avg > baseWeekAvg * 1.01) {
+                                    trend = '上涨';
+                                } else if (week3Avg < baseWeekAvg * 0.99) {
+                                    trend = '下跌';
+                                } else {
+                                    trend = '持平';
+                                }
+                                futureWeeksTrend.push(`第3周: ${trend} (${week3Avg.toFixed(1)})`);
+                            }
+                        }
+                        
+                        // 第四周（接下来5天，共5天）
+                        if (predValues.length >= 20) {
+                            const week4Values = predValues.slice(15, 20);
+                            if (week4Values.length === 5) {
+                                const week4Avg = week4Values.reduce((sum, val) => sum + val, 0) / week4Values.length;
+                                let trend;
+                                if (week4Avg > baseWeekAvg * 1.01) {
+                                    trend = '上涨';
+                                } else if (week4Avg < baseWeekAvg * 0.99) {
+                                    trend = '下跌';
+                                } else {
+                                    trend = '持平';
+                                }
+                                futureWeeksTrend.push(`第4周: ${trend} (${week4Avg.toFixed(1)})`);
+                            }
+                        }
+                        
+                        // 计算基准月均价（选择日期之前20个指数日的真实值）
+                        let baseMonthAvg = 0;
+                        if (historicalData.length > 0) {
+                            // 过滤掉选择日期之后的数据，只保留之前的真实数据
+                            const selectedDateStr = selectedDate.toISOString().split('T')[0];
+                            const filteredHistoricalData = historicalData.filter(item => item.date < selectedDateStr);
+                            
+                            console.log('过滤后的历史数据数量：', filteredHistoricalData.length);
+                            
+                            if (filteredHistoricalData.length >= 20) {
+                                // 按日期排序历史数据（降序）
+                                const sortedHistoricalData = [...filteredHistoricalData].sort((a, b) => new Date(b.date) - new Date(a.date));
+                                // 取最近的20个真实值
+                                const baseMonthValues = sortedHistoricalData.slice(0, 20).map(item => item.value);
+                                baseMonthAvg = baseMonthValues.reduce((sum, val) => sum + val, 0) / baseMonthValues.length;
+                                
+                                // 打印调试信息
+                                console.log('基准月均价计算使用的数据数量：', baseMonthValues.length);
+                                console.log('基准月均价：', baseMonthAvg);
+                            } else {
+                                console.log('历史数据不足20个，无法计算基准月均价');
+                            }
+                        }
+                        
+                        // 计算未来三月的趋势（每月20天）
+                        let futureMonthsTrend = [];
+                        if (baseMonthAvg > 0) {
+                            // 第一个月（当天及其之后19天，共20天）
+                            if (predValues.length >= 20) {
+                                const month1Values = predValues.slice(0, 20);
+                                if (month1Values.length === 20) {
+                                    const month1Avg = month1Values.reduce((sum, val) => sum + val, 0) / month1Values.length;
+                                    let trend;
+                                    if (month1Avg > baseMonthAvg * 1.01) {
+                                        trend = '上涨';
+                                    } else if (month1Avg < baseMonthAvg * 0.99) {
+                                        trend = '下跌';
+                                    } else {
+                                        trend = '持平';
+                                    }
+                                    futureMonthsTrend.push(`第1月: ${trend} (${month1Avg.toFixed(1)})`);
+                                }
+                            }
+                            
+                            // 第二个月（接下来20天，共20天）
+                            if (predValues.length >= 40) {
+                                const month2Values = predValues.slice(20, 40);
+                                if (month2Values.length === 20) {
+                                    const month2Avg = month2Values.reduce((sum, val) => sum + val, 0) / month2Values.length;
+                                    let trend;
+                                    if (month2Avg > baseMonthAvg * 1.01) {
+                                        trend = '上涨';
+                                    } else if (month2Avg < baseMonthAvg * 0.99) {
+                                        trend = '下跌';
+                                    } else {
+                                        trend = '持平';
+                                    }
+                                    futureMonthsTrend.push(`第2月: ${trend} (${month2Avg.toFixed(1)})`);
+                                }
+                            }
+                            
+                            // 第三个月（接下来20天，共20天）
+                            if (predValues.length >= 60) {
+                                const month3Values = predValues.slice(40, 60);
+                                if (month3Values.length === 20) {
+                                    const month3Avg = month3Values.reduce((sum, val) => sum + val, 0) / month3Values.length;
+                                    let trend;
+                                    if (month3Avg > baseMonthAvg * 1.01) {
+                                        trend = '上涨';
+                                    } else if (month3Avg < baseMonthAvg * 0.99) {
+                                        trend = '下跌';
+                                    } else {
+                                        trend = '持平';
+                                    }
+                                    futureMonthsTrend.push(`第3月: ${trend} (${month3Avg.toFixed(1)})`);
+                                }
+                            }
+                        }
+                        
+                        // 使用预测数据的时间范围
+                        const categories = predCategories;
+                        
+                        // 调整预测数据的长度
+                        const adjustedPredValues = [];
+                        for (let i = 0; i < categories.length; i++) {
+                            if (i < predValues.length) {
+                                adjustedPredValues.push(predValues[i]);
+                            } else {
+                                adjustedPredValues.push(null);
+                            }
+                        }
+                        
+                        // 调整真实数据的长度
+                        const adjustedRealValues = [];
+                        for (let i = 0; i < categories.length; i++) {
+                            const currentDate = predData[i].date;
+                            const realDataItem = realData.find(item => item.date === currentDate);
+                            if (realDataItem) {
+                                adjustedRealValues.push(realDataItem.value);
+                            } else {
+                                adjustedRealValues.push(null);
+                            }
+                        }
+                        
+                        // 生成价格分析HTML
+                        let priceAnalysisHTML = '';
+                        if (baseWeekAvg > 0) {
+                            priceAnalysisHTML = `
+                                <div class="trend-analysis">
+                                    <h3>价格分析</h3>
+                                    <p><strong>基准周均价：</strong>${baseWeekAvg.toFixed(2)} ${pageId === 'international-freight' ? '美元/吨' : '元/吨'}</p>
+                                    <p><strong>未来四周趋势：</strong>${futureWeeksTrend.length > 0 ? futureWeeksTrend.join('、') : '数据不足'}</p>
+                                    <p><strong>基准月均价：</strong>${baseMonthAvg > 0 ? baseMonthAvg.toFixed(2) : '数据不足'} ${pageId === 'international-freight' ? '美元/吨' : '元/吨'}</p>
+                                    <p><strong>未来三月趋势：</strong>${futureMonthsTrend.length > 0 ? futureMonthsTrend.join('、') : '数据不足'}</p>
+                                </div>
+                            `;
+                        }
+                        
+                        // 插入价格分析到页面
+                        const pageElement = document.getElementById(pageId + '-page');
+                        if (pageElement) {
+                            // 移除现有的价格分析
+                            const existingAnalysis = pageElement.querySelector('.trend-analysis');
+                            if (existingAnalysis) {
+                                existingAnalysis.remove();
+                            }
+                            
+                            // 插入新的价格分析
+                            const chartContainer = pageElement.querySelector('.chart-container');
+                            if (chartContainer && priceAnalysisHTML) {
+                                chartContainer.insertAdjacentHTML('beforebegin', priceAnalysisHTML);
+                            }
+                        }
+                        
+                        data = {
+                            categories: categories,
+                            series: [
+                                {
+                                    name: seriesName + ' (预测)',
+                                    data: adjustedPredValues
+                                },
+                                {
+                                    name: seriesName + ' (真实)',
+                                    data: adjustedRealValues
+                                }
+                            ]
+                        };
+                    }
+                } else if (pageId === 'domestic-freight' || pageId === 'international-freight') {
+                    // 处理运费数据
+                    if (!Array.isArray(realData)) {
+                        realData = [];
+                    }
+                    
+                    const predValues = predData.map(function(item) {
+                        return item.predict;
+                    });
+                    const predCategories = predData.map(function(item) {
+                        const date = new Date(item.date);
+                        return date.format('m-d');
+                    });
+                    
+                    const categories = predCategories;
+                    
+                    const adjustedPredValues = [];
+                    for (let i = 0; i < categories.length; i++) {
+                        if (i < predValues.length) {
+                            adjustedPredValues.push(predValues[i]);
+                        } else {
+                            adjustedPredValues.push(null);
+                        }
+                    }
+                    
+                    const adjustedRealValues = [];
+                    for (let i = 0; i < categories.length; i++) {
+                        const currentDate = predData[i].date;
+                        const realDataItem = realData.find(item => item.date === currentDate);
+                        if (realDataItem) {
+                            adjustedRealValues.push(realDataItem.value);
+                        } else {
+                            adjustedRealValues.push(null);
+                        }
+                    }
+                    
+                    const freightName = pageId === 'domestic-freight' ? '国内运费' : '国际运费';
+                    
+                    data = {
+                        categories: categories,
+                        series: [
+                            {
+                                name: freightName + ' (预测)',
+                                data: adjustedPredValues
+                            },
+                            {
+                                name: freightName + ' (真实)',
+                                data: adjustedRealValues
+                            }
+                        ]
+                    };
+                }
+                
+                if (!data) return;
+                
+                // 根据选择的天数调整数据
+                let adjustedCategories = data.categories;
+                let adjustedSeries = JSON.parse(JSON.stringify(data.series));
+                
+                if (days < adjustedCategories.length) {
+                    adjustedCategories = adjustedCategories.slice(0, days);
+                    adjustedSeries.forEach(function(serie) {
+                        serie.data = serie.data.slice(0, days);
+                    });
+                }
+                
+                // 设置图表选项
+                const option = {
+                    backgroundColor: 'transparent',
+                    title: {
+                        text: pageId === 'domestic-coal' ? '国内北方港煤价预测趋势' :
+                              pageId === 'international-coal' ? '进口煤价格预测趋势' :
+                              pageId === 'domestic-freight' ? '国内运费预测趋势' :
+                              pageId === 'international-freight' ? '国际运费预测趋势' :
+                              '发电量预测趋势',
+                        left: 'center',
+                        textStyle: {
+                            color: '#1a56db',
+                            fontSize: 18,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#1a56db',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        textStyle: {
+                            color: '#333',
+                            fontSize: 14
+                        },
+                        padding: 12,
+                        formatter: function(params) {
+                            let result = params[0].name + '<br/>';
+                            params.forEach(function(item) {
+                                let displayValue;
+                                if (item.value === null || item.value === undefined) {
+                                    displayValue = '--';
+                                } else if (typeof item.value === 'number') {
+                                    displayValue = item.value.toFixed(2);
+                                } else {
+                                    displayValue = item.value;
+                                }
+                                let unit = pageId === 'power-generation' ? ' 万千瓦时' : 
+                                          (pageId === 'international-freight' ? ' 美元/吨' : ' 元/吨');
+                                result += item.marker + item.seriesName + ': ' + displayValue + unit + '<br/>';
+                            });
+                            return result;
+                        }
+                    },
+                    legend: {
+                        type: 'scroll',
+                        data: (function() {
+                            if (pageId === 'power-generation') {
+                                const activeUnitButton = document.querySelector('.coal-button[data-page="power-generation"][data-unit].active');
+                                const currentUnit = activeUnitButton ? activeUnitButton.getAttribute('data-unit') : 'total';
+                                if (currentUnit === 'units') {
+                                    return data.series.map(function(s) { return s.name; });
+                                } else {
+                                    return [data.series[0].name, data.series[1].name];
+                                }
+                            } else {
+                                return [data.series[0].name, data.series[1].name];
+                            }
+                        })(),
+                        top: 30,
+                        left: 'center',
+                        right: 10,
+                        width: '80%',
+                        itemWidth: 12,
+                        itemHeight: 12,
+                        textStyle: {
+                            color: '#4b5563',
+                            fontSize: 11
+                        },
+                        pageIconSize: 10,
+                        pageTextStyle: {
+                            color: '#4b5563',
+                            fontSize: 10
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        top: pageId !== 'power-generation' ? '20%' : '15%',
+                        containLabel: true
+                    },
+                    dataZoom: [
+                        {
+                            type: 'slider',
+                            xAxisIndex: 0,
+                            start: 0,
+                            end: 100
+                        },
+                        {
+                            type: 'inside',
+                            xAxisIndex: 0,
+                            start: 0,
+                            end: 100
+                        }
+                    ],
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: adjustedCategories,
+                        axisLine: {
+                            lineStyle: {
+                                color: '#1a56db',
+                                width: 2
+                            }
+                        },
+                        axisLabel: {
+                            color: '#4b5563',
+                            rotate: 0,
+                            fontSize: 12
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#e0e7ff'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: pageId === 'power-generation' ? '发电量（万千瓦时）' : 
+                              (pageId === 'international-freight' ? '价格（美元/吨）' : '价格（元/吨）'),
+                        nameTextStyle: {
+                            color: '#4b5563',
+                            fontSize: 12
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#1a56db',
+                                width: 2
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#e0e7ff',
+                                type: 'dashed'
+                            }
+                        },
+                        axisLabel: {
+                            color: '#4b5563',
+                            fontSize: 12
+                        },
+                        axisTick: {
+                            lineStyle: {
+                                color: '#e0e7ff'
+                            }
+                        },
+                        scale: true
+                    },
+                    series: adjustedSeries.map(function(item, index) {
+                        // 提取颜色，优先使用数据中定义的颜色
+                        const seriesColor = item.color || (index === 0 ? '#2962FF' : '#00E5FF');
+                        // 提取线条样式，优先使用数据中定义的样式
+                        const lineStyleType = item.lineStyle && item.lineStyle.type ? item.lineStyle.type : 'solid';
+                        
+                        return {
+                            name: item.name,
+                            type: 'line',
+                            data: item.data,
+                            areaStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: seriesColor + '30' },
+                                    { offset: 1, color: seriesColor + '05' }
+                                ])
+                            },
+                            lineStyle: {
+                                width: 3,
+                                color: seriesColor,
+                                type: lineStyleType
+                            },
+                            symbol: 'circle',
+                            symbolSize: function(data) {
+                                return data === null || data === undefined ? 4 : 8;
+                            },
+                            itemStyle: {
+                                color: seriesColor
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 15,
+                                    shadowColor: seriesColor + '80'
+                                },
+                                focus: 'series'
+                            },
+                            animation: true,
+                            animationDuration: 1500,
+                            animationEasing: 'cubicOut'
+                        };
+                    })
+                };
+                
+                // 设置图表
+                myChart.setOption(option);
+                
+                // 响应式调整
+                window.addEventListener('resize', function() {
+                    myChart.resize();
+                });
+            }).catch(function(error) {
+                console.error('Error loading chart data:', error);
+                myChart.setOption({
+                    title: {
+                        text: '数据加载失败',
+                        left: 'center',
+                        textStyle: {
+                            color: 'red',
+                            fontSize: 16
+                        }
+                    }
+                });
+            });
+        }
+        
+        // ==================== 日期格式化函数 ====================
+        Date.prototype.format = function(fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,
+                "m+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "Y+": this.getFullYear(),
+            };
+            
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            
+            return fmt;
+        };
+        
+        // ==================== 检查VIP状态 ====================
+        function checkIsPredictionVIP(flag) {
+            if (isPredictionVIP) {
+                const activePage = document.querySelector('.page-content[style*="display: block"]');
+                if (activePage) {
+                    const pageId = activePage.id.replace('-page', '');
+                    loadChart(pageId, null, currentDays);
+                } else {
+                    loadChart('domestic-coal', null, currentDays);
+                }
+            }
+        }
+        
+        // ==================== 日期选择事件 ====================
+        function checkTime() {
+            const activePage = document.querySelector('.page-content[style*="display: block"]');
+            if (activePage) {
+                const pageId = activePage.id.replace('-page', '');
+                loadChart(pageId, null, currentDays);
+            } else {
+                loadChart('domestic-coal', null, currentDays);
+            }
+        }
+        
+        // ==================== 初始化函数 ====================
+        function initDecisionPage() {
+            // 为决策页面的电厂按钮添加事件
+            const decisionButtons = document.querySelectorAll('.coal-button[data-page="decision-model"]');
+            decisionButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const plantType = this.getAttribute('data-type');
+                    currentPlant = plantType;
+                    
+                    // 移除所有按钮的active类
+                    decisionButtons.forEach(function(btn) {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 加载决策历史
+                    loadDecisionHistory(plantType);
+                });
+            });
+            
+            // 为决策历史下拉框添加事件
+            const historyDropdown = document.getElementById('decision-history-dropdown');
+            if (historyDropdown) {
+                historyDropdown.addEventListener('change', function() {
+                    const decisionId = this.value;
+                    if (decisionId && decisionId !== 'json') {
+                        currentDecisionId = decisionId;
+                        loadDecisionDetail(decisionId);
+                    }
+                });
+            }
+        }
+        
+        // 页面加载完成后初始化决策页面
+        setTimeout(initDecisionPage, 100);
+        
+                // ==================== 备用数据（当JSON文件不存在时使用） ====================
+        var defaultDecisionData = {
+            kemen: {
+                "decision_date": "2025-4-30",
+                "is_emergency": false,
+                "duration_days": 20,
+                "total_purchase_quantity": 1069493.0,
+                "procurement_plan": [
+                    {
+                        "cycle_index": 1,
+                        "date": "2025/05/04",
+                        "total_quantity": 9484.16,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 9484.16,
+                                "price": 529.24,
+                                "coal_price": 493.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 529.24,
+                                "latest_delivery_date": "2025/05/04"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 0,
+                                "price": 596.24,
+                                "coal_price": 560.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 596.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 676.24,
+                                "coal_price": 640.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 676.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 502.71,
+                                "coal_price": 443.01,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 502.71,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 621.66,
+                                "coal_price": 561.96,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 621.66,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 736.51,
+                                "coal_price": 676.81,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 736.51,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 2,
+                        "date": "2025/05/09",
+                        "total_quantity": 187897.98,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 75159.19,
+                                "price": 510.62,
+                                "coal_price": 475.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 510.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 112738.79,
+                                "price": 578.62,
+                                "coal_price": 543.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 578.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 658.62,
+                                "coal_price": 623.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 658.62,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 497.15,
+                                "coal_price": 436.49,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 497.15,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 600.76,
+                                "coal_price": 540.1,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 600.76,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 725.59,
+                                "coal_price": 664.93,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 725.59,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 3,
+                        "date": "2025/05/14",
+                        "total_quantity": 448379.07,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 179351.63,
+                                "price": 504.74,
+                                "coal_price": 469.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 504.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 269027.44,
+                                "price": 571.74,
+                                "coal_price": 536.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 571.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 653.74,
+                                "coal_price": 618.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 653.74,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 486.36,
+                                "coal_price": 427.73,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 486.36,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 589.83,
+                                "coal_price": 531.2,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 589.83,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 707.16,
+                                "coal_price": 648.53,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 707.16,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 4,
+                        "date": "2025/05/19",
+                        "total_quantity": 423731.79,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 169492.72,
+                                "price": 502.39,
+                                "coal_price": 469.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 502.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 254239.08,
+                                "price": 569.39,
+                                "coal_price": 536.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 569.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 651.39,
+                                "coal_price": 618.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 651.39,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 478.79,
+                                "coal_price": 422.03,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 478.79,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 582.26,
+                                "coal_price": 525.5,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 582.26,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 705.29,
+                                "coal_price": 648.53,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 705.29,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    }
+                ]
+            },
+            shaowu: {
+                "decision_date": "2025-4-30",
+                "is_emergency": false,
+                "duration_days": 20,
+                "total_purchase_quantity": 895432.0,
+                "procurement_plan": [
+                    {
+                        "cycle_index": 1,
+                        "date": "2025/05/04",
+                        "total_quantity": 8234.56,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 8234.56,
+                                "price": 529.24,
+                                "coal_price": 493.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 529.24,
+                                "latest_delivery_date": "2025/05/04"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 0,
+                                "price": 596.24,
+                                "coal_price": 560.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 596.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 676.24,
+                                "coal_price": 640.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 676.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 502.71,
+                                "coal_price": 443.01,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 502.71,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 621.66,
+                                "coal_price": 561.96,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 621.66,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 736.51,
+                                "coal_price": 676.81,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 736.51,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 2,
+                        "date": "2025/05/09",
+                        "total_quantity": 156789.34,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 62715.74,
+                                "price": 510.62,
+                                "coal_price": 475.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 510.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 94073.6,
+                                "price": 578.62,
+                                "coal_price": 543.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 578.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 658.62,
+                                "coal_price": 623.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 658.62,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 497.15,
+                                "coal_price": 436.49,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 497.15,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 600.76,
+                                "coal_price": 540.1,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 600.76,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 725.59,
+                                "coal_price": 664.93,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 725.59,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 3,
+                        "date": "2025/05/14",
+                        "total_quantity": 378945.67,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 151578.27,
+                                "price": 504.74,
+                                "coal_price": 469.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 504.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 227367.4,
+                                "price": 571.74,
+                                "coal_price": 536.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 571.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 653.74,
+                                "coal_price": 618.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 653.74,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 486.36,
+                                "coal_price": 427.73,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 486.36,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 589.83,
+                                "coal_price": 531.2,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 589.83,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 707.16,
+                                "coal_price": 648.53,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 707.16,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 4,
+                        "date": "2025/05/19",
+                        "total_quantity": 351462.43,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 140584.97,
+                                "price": 502.39,
+                                "coal_price": 469.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 502.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 210877.46,
+                                "price": 569.39,
+                                "coal_price": 536.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 569.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 651.39,
+                                "coal_price": 618.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 651.39,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 478.79,
+                                "coal_price": 422.03,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 478.79,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 582.26,
+                                "coal_price": 525.5,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 582.26,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 705.29,
+                                "coal_price": 648.53,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 705.29,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    }
+                ]
+            },
+            yongan: {
+                "decision_date": "2025-4-30",
+                "is_emergency": false,
+                "duration_days": 20,
+                "total_purchase_quantity": 723456.0,
+                "procurement_plan": [
+                    {
+                        "cycle_index": 1,
+                        "date": "2025/05/04",
+                        "total_quantity": 6789.12,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 6789.12,
+                                "price": 529.24,
+                                "coal_price": 493.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 529.24,
+                                "latest_delivery_date": "2025/05/04"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 0,
+                                "price": 596.24,
+                                "coal_price": 560.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 596.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 676.24,
+                                "coal_price": 640.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 676.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 502.71,
+                                "coal_price": 443.01,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 502.71,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 621.66,
+                                "coal_price": 561.96,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 621.66,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 736.51,
+                                "coal_price": 676.81,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 736.51,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 2,
+                        "date": "2025/05/09",
+                        "total_quantity": 123456.78,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 49382.71,
+                                "price": 510.62,
+                                "coal_price": 475.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 510.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 74074.07,
+                                "price": 578.62,
+                                "coal_price": 543.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 578.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 658.62,
+                                "coal_price": 623.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 658.62,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 497.15,
+                                "coal_price": 436.49,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 497.15,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 600.76,
+                                "coal_price": 540.1,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 600.76,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 725.59,
+                                "coal_price": 664.93,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 725.59,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 3,
+                        "date": "2025/05/14",
+                        "total_quantity": 298765.43,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 119506.17,
+                                "price": 504.74,
+                                "coal_price": 469.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 504.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 179259.26,
+                                "price": 571.74,
+                                "coal_price": 536.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 571.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 653.74,
+                                "coal_price": 618.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 653.74,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 486.36,
+                                "coal_price": 427.73,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 486.36,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 589.83,
+                                "coal_price": 531.2,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 589.83,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 707.16,
+                                "coal_price": 648.53,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 707.16,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 4,
+                        "date": "2025/05/19",
+                        "total_quantity": 294444.67,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 117777.87,
+                                "price": 502.39,
+                                "coal_price": 469.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 502.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 176666.8,
+                                "price": 569.39,
+                                "coal_price": 536.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 569.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 651.39,
+                                "coal_price": 618.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 651.39,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 478.79,
+                                "coal_price": 422.03,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 478.79,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 582.26,
+                                "coal_price": 525.5,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 582.26,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 705.29,
+                                "coal_price": 648.53,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 705.29,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    }
+                ]
+            },
+            zhangping: {
+                "decision_date": "2025-4-30",
+                "is_emergency": false,
+                "duration_days": 20,
+                "total_purchase_quantity": 623456.0,
+                "procurement_plan": [
+                    {
+                        "cycle_index": 1,
+                        "date": "2025/05/04",
+                        "total_quantity": 5678.9,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 5678.9,
+                                "price": 529.24,
+                                "coal_price": 493.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 529.24,
+                                "latest_delivery_date": "2025/05/04"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 0,
+                                "price": 596.24,
+                                "coal_price": 560.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 596.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 676.24,
+                                "coal_price": 640.0,
+                                "freight": 36.24,
+                                "delivered_unit_cost": 676.24,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 502.71,
+                                "coal_price": 443.01,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 502.71,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 621.66,
+                                "coal_price": 561.96,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 621.66,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 736.51,
+                                "coal_price": 676.81,
+                                "freight": 59.7,
+                                "delivered_unit_cost": 736.51,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 2,
+                        "date": "2025/05/09",
+                        "total_quantity": 103456.78,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 41382.71,
+                                "price": 510.62,
+                                "coal_price": 475.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 510.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 62074.07,
+                                "price": 578.62,
+                                "coal_price": 543.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 578.62,
+                                "latest_delivery_date": "2025/05/09"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 658.62,
+                                "coal_price": 623.0,
+                                "freight": 35.62,
+                                "delivered_unit_cost": 658.62,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 497.15,
+                                "coal_price": 436.49,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 497.15,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 600.76,
+                                "coal_price": 540.1,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 600.76,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 725.59,
+                                "coal_price": 664.93,
+                                "freight": 60.66,
+                                "delivered_unit_cost": 725.59,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 3,
+                        "date": "2025/05/14",
+                        "total_quantity": 258765.43,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 103506.17,
+                                "price": 504.74,
+                                "coal_price": 469.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 504.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 155259.26,
+                                "price": 571.74,
+                                "coal_price": 536.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 571.74,
+                                "latest_delivery_date": "2025/05/14"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 653.74,
+                                "coal_price": 618.0,
+                                "freight": 35.74,
+                                "delivered_unit_cost": 653.74,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 486.36,
+                                "coal_price": 427.73,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 486.36,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 589.83,
+                                "coal_price": 531.2,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 589.83,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 707.16,
+                                "coal_price": 648.53,
+                                "freight": 58.63,
+                                "delivered_unit_cost": 707.16,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    },
+                    {
+                        "cycle_index": 4,
+                        "date": "2025/05/19",
+                        "total_quantity": 255554.89,
+                        "items": [
+                            {
+                                "coal_name": "CCI4500",
+                                "quantity": 102221.96,
+                                "price": 502.39,
+                                "coal_price": 469.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 502.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5000",
+                                "quantity": 153332.93,
+                                "price": 569.39,
+                                "coal_price": 536.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 569.39,
+                                "latest_delivery_date": "2025/05/24"
+                            },
+                            {
+                                "coal_name": "CCI5500",
+                                "quantity": 0,
+                                "price": 651.39,
+                                "coal_price": 618.0,
+                                "freight": 33.39,
+                                "delivered_unit_cost": 651.39,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI3800",
+                                "quantity": 0,
+                                "price": 478.79,
+                                "coal_price": 422.03,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 478.79,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI4700",
+                                "quantity": 0,
+                                "price": 582.26,
+                                "coal_price": 525.5,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 582.26,
+                                "latest_delivery_date": "0"
+                            },
+                            {
+                                "coal_name": "进口CCI5500",
+                                "quantity": 0,
+                                "price": 705.29,
+                                "coal_price": 648.53,
+                                "freight": 56.76,
+                                "delivered_unit_cost": 705.29,
+                                "latest_delivery_date": "0"
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+        
+        // 加载默认数据（如果JSON文件不存在）
+        function loadDefaultDecisionData() {
+            console.log('加载默认决策数据...');
+            
+            // 为每个电厂设置默认数据
+            for (var plant in defaultDecisionData) {
+                if (!decisionData[plant]) {
+                    decisionData[plant] = defaultDecisionData[plant];
+                    console.log('已加载' + plantNameMap[plant] + '默认数据');
+                }
+            }
+            
+            // 更新当前页面的UI
+            if (currentPlant && decisionData[currentPlant]) {
+                updateDecisionPageUI(currentPlant);
+                
+                const activePage = document.querySelector('.page-content[style*="display: block"]');
+                if (activePage && activePage.id === 'decision-model-page') {
+                    loadChart('decision-model', currentPlant, currentDays);
+                }
+            }
+        }
+        
+        // 在fetch失败后尝试加载默认数据
+        setTimeout(function() {
+            // 如果某个电厂数据为空，尝试加载默认数据
+            var needDefaultData = false;
+            for (var plant in plantNameMap) {
+                if (!decisionData[plant]) {
+                    needDefaultData = true;
+                    break;
+                }
+            }
+            
+            if (needDefaultData) {
+                loadDefaultDecisionData();
+            }
+        }, 2000);
+        
+    </script>
+</body>
+</html>

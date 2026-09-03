@@ -1,0 +1,89 @@
+# 采购策略分析报告
+
+## 一、策略概述
+{strategy_overview}
+
+## 二、采购量分析
+{purchase_analysis}
+
+## 三、配煤方案评估
+{blending_evaluation}
+
+## 四、采购计划详情
+{detailed_plan}
+
+---
+
+*报告生成时间：{report_time}*
+*生成工具：煤炭采购决策支持系统*
+
+
+# 可选：专业版报告模板（可删除不需要的部分）
+
+---
+
+# 煤炭采购策略报告
+
+## 1. 报告摘要
+{strategy_overview}
+
+## 2. 市场分析与策略制定依据
+- 价格趋势分析
+- 库存水平评估
+- 供应风险考量
+
+## 3. 采购量规划
+{purchase_analysis}
+
+## 4. 配煤方案优化
+{blending_evaluation}
+
+## 5. 详细采购计划
+### 5.1 周期采购安排
+{detailed_plan}
+
+### 5.2 价格与成本分析
+
+## 6. 执行建议
+- 风险预警
+- 调整机制
+
+## 7. 附录
+- 数据来源
+- 模型参数
+
+---
+
+*报告编号：CP-{report_date}*
+*生成时间：{report_time}*
+
+
+# 可选：简洁版报告模板（适合快速浏览）
+
+---
+
+## 采购策略简报
+
+### 核心策略：
+{strategy_overview}
+
+### 采购分配：
+{purchase_analysis}
+
+### 配煤方案：
+{blending_evaluation}
+
+### 具体计划：
+{detailed_plan}
+
+---
+
+*生成时间：{report_time}*
+
+
+# 使用说明：
+# 1. 选择一个适合的模板结构，删除不需要的部分
+# 2. 可以根据需要添加或修改标题和格式
+# 3. 保留所有占位符（如 {strategy_overview}）以便系统自动填充内容
+# 4. 可以添加静态文本或公司标志等自定义内容
+# 5. 保存文件为 output_template.txt 即可使用

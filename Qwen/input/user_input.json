@@ -1,0 +1,51 @@
+{
+  "price_file": "./data/coal_output.json",
+  "inside_freight_file": "./data/insideinfer.csv",
+  "outside_freight_file": "./data/outsideinfer.csv",
+  "outside_fx_rate": 6.9125,
+  "coal_config": {
+    "CCI4500": {
+      "current_price": 511,
+      "heat_value": 4500
+    },
+    "CCI5000": {
+      "current_price": 578,
+      "heat_value": 5000
+    },
+    "CCI5500": {
+      "current_price": 657,
+      "heat_value": 5500
+    },
+    "CCI进口3800": {
+      "current_price": 452.45,
+      "heat_value": 3800
+    },
+    "CCI进口4700": {
+      "current_price": 592.3,
+      "heat_value": 4700
+    },
+    "CCI进口5500": {
+      "current_price": 685.26,
+      "heat_value": 5500
+    }
+  },
+  "prev_acc": 0.72,
+  "real_acc": 0.68,
+  "lambda_base": 0.5,
+  "cv_t": 0.07,
+  "beta1": 0.6,
+  "beta2": 0.4,
+  "decay": 0.7,
+  "base_demand": 905483,
+  "max_stock": 1400000,
+  "prev_stock": 330507,
+  "extra_factor": 0.05,
+  "weekly_accuracy": [
+    0.8,
+    0.7,
+    0.75,
+    0.6
+  ],
+  "target_heat": 4800,
+  "decision_date": "2025/4/30"
+}

@@ -1,0 +1,96 @@
+#!/bin/bash
+
+echo "启动服务监控..."
+echo "监控间隔: 30秒"
+echo "日志文件: /home/coal/Time-coal/services/logs/monitor.log"
+echo "按 Ctrl+C 停止监控"
+echo ""
+
+# 创建日志目录
+mkdir -p /home/coal/Time-coal/services/logs
+
+# 日志函数
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> /home/coal/Time-coal/services/logs/monitor.log
+}
+
+# 检查服务是否正常运行
+check_service() {
+    local service_name="$1"
+    local port="$2"
+    local pid_file="$3"
+    
+    # 检查PID文件是否存在
+    if [ ! -f "$pid_file" ]; then
+        log "$service_name PID文件不存在"
+        return 1
+    fi
+    
+    # 读取PID
+    local pid=$(cat "$pid_file" 2>/dev/null)
+    if [ -z "$pid" ]; then
+        log "$service_name PID为空"
+        return 1
+    fi
+    
+    # 检查进程是否存在
+    if ! kill -0 "$pid" 2>/dev/null; then
+        log "$service_name 进程 $pid 不存在"
+        return 1
+    fi
+    
+    # 检查端口是否监听
+    if ! ss -tln 2>/dev/null | grep -q ":$port "; then
+        log "$service_name 端口 $port 未监听"
+        return 1
+    fi
+    
+    return 0
+}
+
+# 重启服务
+restart_service() {
+    local service_name="$1"
+    
+    log "尝试重启 $service_name ..."
+    
+    if [ "$service_name" = "网站服务" ]; then
+        pkill -f "http.server 8001"
+        sleep 1
+        cd /home/coal/Time-coal/autoinfer/html1
+        nohup python -m http.server 8001 >> /home/coal/Time-coal/services/logs/web_server.log 2>&1 &
+        echo $! > /tmp/web_server.pid
+        log "网站服务重启完成，新PID: $!"
+    else
+        pkill -f "api_server_stdlib.py"
+        sleep 1
+        cd /home/coal/Time-coal/autoinfer
+        nohup python api_server_stdlib.py >> /home/coal/Time-coal/services/logs/api_server.log 2>&1 &
+        echo $! > /tmp/api_server.pid
+        log "API服务重启完成，新PID: $!"
+    fi
+    
+    sleep 2
+}
+
+log "服务监控启动"
+
+# 主监控循环
+while true; do
+    # 检查网站服务
+    if ! check_service "网站服务" "8001" "/tmp/web_server.pid"; then
+        restart_service "网站服务"
+    fi
+    
+    # 检查API服务
+    if ! check_service "API服务" "8081" "/tmp/api_server.pid"; then
+        restart_service "API服务"
+    fi
+    
+    # 每小时记录一次状态
+    if [ $(date +%M) = "00" ]; then
+        log "服务状态正常 - $(date '+%Y-%m-%d %H:%M:%S')"
+    fi
+    
+    sleep 30
+done

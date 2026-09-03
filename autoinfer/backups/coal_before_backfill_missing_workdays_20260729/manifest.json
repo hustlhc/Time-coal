@@ -1,0 +1,34 @@
+{
+  "createdAt": "2026-07-29T16:16:05",
+  "modelId": "Coal6_TimeMixerNoEasy_64_120_platform_huber_seq64_full",
+  "checkpointSha256": "d63c7e7bf02a6f14ea7f8e4c1e630a00863aff899ffa5a64db881f265085e4bd",
+  "processingVersion": "full_savgol9_anchor_smoothed_first_v1",
+  "dates": [
+    "2026-05-15",
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-20",
+    "2026-05-21",
+    "2026-05-22",
+    "2026-05-25",
+    "2026-05-26"
+  ],
+  "coalTypes": [
+    "CCI4500infer",
+    "CCI5000infer",
+    "CCI5500infer",
+    "CCI3800outinfer",
+    "CCI4700outinfer",
+    "CCI5500outinfer"
+  ],
+  "missingJsonBefore": [
+    "2026-05-15",
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-20",
+    "2026-05-21",
+    "2026-05-22",
+    "2026-05-25",
+    "2026-05-26"
+  ]
+}

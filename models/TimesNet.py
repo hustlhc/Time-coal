@@ -8,14 +8,14 @@ from layers.Conv_Blocks import Inception_Block_V1
 
 def FFT_for_Period(x, k=2):
     # [B, T, C]
-    xf = torch.fft.rfft(x, dim=1)
+    xf = torch.fft.rfft(x, dim=1) # rfft只返回正频率部分，输出形状为[B, T//2+1, C] xf包含复数形式的频域表示(实部+虚部)
     # find period by amplitudes
-    frequency_list = abs(xf).mean(0).mean(-1)
+    frequency_list = abs(xf).mean(0).mean(-1)   # frequency_list: 每个频率分量的平均振幅
     frequency_list[0] = 0
-    _, top_list = torch.topk(frequency_list, k)
+    _, top_list = torch.topk(frequency_list, k) # 找出振幅最大的k个频率分量 top_list: 包含最大振幅对应的频率索引，形状[k]
     top_list = top_list.detach().cpu().numpy()
-    period = x.shape[1] // top_list
-    return period, abs(xf).mean(-1)[:, top_list]
+    period = x.shape[1] // top_list # 步骤6: 计算周期
+    return period, abs(xf).mean(-1)[:, top_list] # 返回主要周期及对应振幅
 
 
 class TimesBlock(nn.Module):
@@ -35,12 +35,12 @@ class TimesBlock(nn.Module):
 
     def forward(self, x):
         B, T, N = x.size()
-        period_list, period_weight = FFT_for_Period(x, self.k)
+        period_list, period_weight = FFT_for_Period(x, self.k) # 返回主要周期及对应振幅
 
         res = []
         for i in range(self.k):
             period = period_list[i]
-            # padding
+            # padding # 步骤2: 填充以确保长度是周期的整数倍
             if (self.seq_len + self.pred_len) % period != 0:
                 length = (
                                  ((self.seq_len + self.pred_len) // period) + 1) * period
@@ -49,21 +49,22 @@ class TimesBlock(nn.Module):
             else:
                 length = (self.seq_len + self.pred_len)
                 out = x
-            # reshape
+            # reshape # 步骤3: 重塑为2D张量 - 关键的时间2D化操作
             out = out.reshape(B, length // period, period,
                               N).permute(0, 3, 1, 2).contiguous()
-            # 2D conv: from 1d Variation to 2d Variation
+            # 2D conv: from 1d Variation to 2d Variation   # 步骤4: 应用2D卷积捕捉时间变化模式
             out = self.conv(out)
-            # reshape back
+            # reshape back # 步骤5: 重塑回原始形状
             out = out.permute(0, 2, 3, 1).reshape(B, -1, N)
-            res.append(out[:, :(self.seq_len + self.pred_len), :])
-        res = torch.stack(res, dim=-1)
-        # adaptive aggregation
+            res.append(out[:, :(self.seq_len + self.pred_len), :]) #res: 4D [B, length , N, top_k]
+        # 步骤6: 堆叠所有周期的处理结果
+        res = torch.stack(res, dim=-1)   # 形状: [B, T, N, k]
+        # adaptive aggregation # 步骤7: 自适应聚合 - 基于频率振幅权重
         period_weight = F.softmax(period_weight, dim=1)
         period_weight = period_weight.unsqueeze(
             1).unsqueeze(1).repeat(1, T, N, 1)
-        res = torch.sum(res * period_weight, -1)
-        # residual connection
+        res = torch.sum(res * period_weight, -1) # 加权求和
+        # residual connection # 步骤8: 残差连接
         res = res + x
         return res
 
@@ -80,12 +81,15 @@ class Model(nn.Module):
         self.seq_len = configs.seq_len
         self.label_len = configs.label_len
         self.pred_len = configs.pred_len
+        # 构建多层TimesBlock
         self.model = nn.ModuleList([TimesBlock(configs)
                                     for _ in range(configs.e_layers)])
+        # 数据嵌入层
         self.enc_embedding = DataEmbedding(configs.enc_in, configs.d_model, configs.embed, configs.freq,
                                            configs.dropout)
         self.layer = configs.e_layers
-        self.layer_norm = nn.LayerNorm(configs.d_model)
+        self.layer_norm = nn.LayerNorm(configs.d_model) # 层归一化
+        # 不同任务的输出层
         if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
             self.predict_linear = nn.Linear(
                 self.seq_len, self.pred_len + self.seq_len)
@@ -101,24 +105,24 @@ class Model(nn.Module):
                 configs.d_model * configs.seq_len, configs.num_class)
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
-        # Normalization from Non-stationary Transformer
-        means = x_enc.mean(1, keepdim=True).detach()
+        # Normalization from Non-stationary Transformer【0-归一化 先减去均值，再除以标准差】
+        means = x_enc.mean(1, keepdim=True).detach() # 均值
         x_enc = x_enc.sub(means)
         stdev = torch.sqrt(
-            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
-        x_enc = x_enc.div(stdev)
+            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)   # 标准差
+        x_enc = x_enc.div(stdev)    # 归一化
 
         # embedding
         enc_out = self.enc_embedding(x_enc, x_mark_enc)  # [B,T,C]
         enc_out = self.predict_linear(enc_out.permute(0, 2, 1)).permute(
-            0, 2, 1)  # align temporal dimension
+            0, 2, 1)  # align temporal dimension 【一次permute(0, 2, 1)就让最后一个维度为seqlen了  再变回原本的形状  [B,C,T] → [B,T,C]】
         # TimesNet
         for i in range(self.layer):
-            enc_out = self.layer_norm(self.model[i](enc_out))
-        # project back
+            enc_out = self.layer_norm(self.model[i](enc_out)) # 层归一化
+        # project back 投影回原始维度
         dec_out = self.projection(enc_out)
-
-        # De-Normalization from Non-stationary Transformer
+ 
+        # De-Normalization from Non-stationary Transformer 反归一化
         dec_out = dec_out.mul(
                   (stdev[:, 0, :].unsqueeze(1).repeat(
                       1, self.pred_len + self.seq_len, 1)))
@@ -182,6 +186,7 @@ class Model(nn.Module):
 
     def classification(self, x_enc, x_mark_enc):
         # embedding
+        #print("x_enc:",x_enc.shape)
         enc_out = self.enc_embedding(x_enc, None)  # [B,T,C]
         # TimesNet
         for i in range(self.layer):

@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=1
+# export CUDA_VISIBLE_DEVICES=1
 
 model_name=TimeXer
 des='Timexer-MS'
@@ -25,6 +25,7 @@ python -u run.py \
   --des $des \
   --itr 1
 
+'''
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
@@ -92,3 +93,4 @@ python -u run.py \
   --batch_size 128 \
   --des $des \
   --itr 1
+'''

@@ -94,12 +94,12 @@ class TemporalEmbedding(nn.Module):
 
 
 class TimeFeatureEmbedding(nn.Module):
-    def __init__(self, d_model, embed_type='timeF', freq='h'):
+    def __init__(self, d_model, embed_type='timeF', freq='h', time_feature_dim=None):
         super(TimeFeatureEmbedding, self).__init__()
 
         freq_map = {'h': 4, 't': 5, 's': 6,
                     'm': 1, 'a': 1, 'w': 2, 'd': 3, 'b': 3}
-        d_inp = freq_map[freq]
+        d_inp = time_feature_dim if time_feature_dim is not None else freq_map[freq]
         self.embed = nn.Linear(d_inp, d_model, bias=False)
 
     def forward(self, x):
@@ -107,14 +107,14 @@ class TimeFeatureEmbedding(nn.Module):
 
 
 class DataEmbedding(nn.Module):
-    def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
+    def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1, time_feature_dim=None):
         super(DataEmbedding, self).__init__()
 
         self.value_embedding = TokenEmbedding(c_in=c_in, d_model=d_model)
         self.position_embedding = PositionalEmbedding(d_model=d_model)
         self.temporal_embedding = TemporalEmbedding(d_model=d_model, embed_type=embed_type,
                                                     freq=freq) if embed_type != 'timeF' else TimeFeatureEmbedding(
-            d_model=d_model, embed_type=embed_type, freq=freq)
+            d_model=d_model, embed_type=embed_type, freq=freq, time_feature_dim=time_feature_dim)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, x_mark):
@@ -133,6 +133,9 @@ class DataEmbedding_inverted(nn.Module):
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, x_mark):
+        print("DataEmbedding_inverted...")
+        print("x : ", x.shape)
+        print("x_mark : ", x_mark.shape)
         x = x.permute(0, 2, 1)
         # x: [Batch Variate Time]
         if x_mark is None:
@@ -144,14 +147,14 @@ class DataEmbedding_inverted(nn.Module):
 
 
 class DataEmbedding_wo_pos(nn.Module):
-    def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
+    def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1, time_feature_dim=None):
         super(DataEmbedding_wo_pos, self).__init__()
 
         self.value_embedding = TokenEmbedding(c_in=c_in, d_model=d_model)
         self.position_embedding = PositionalEmbedding(d_model=d_model)
         self.temporal_embedding = TemporalEmbedding(d_model=d_model, embed_type=embed_type,
                                                     freq=freq) if embed_type != 'timeF' else TimeFeatureEmbedding(
-            d_model=d_model, embed_type=embed_type, freq=freq)
+            d_model=d_model, embed_type=embed_type, freq=freq, time_feature_dim=time_feature_dim)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, x_mark):

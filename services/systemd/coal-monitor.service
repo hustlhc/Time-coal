@@ -1,0 +1,18 @@
+[Unit]
+Description=Coal Services Monitor
+After=coal-services.service
+Requires=coal-services.service
+
+[Service]
+Type=simple
+User=coal
+WorkingDirectory=/home/lhc/Time-coal/services
+ExecStart=/bin/bash /home/lhc/Time-coal/services/monitor_services.sh
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=coal-monitor
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  incremental-update:
+    build: .
+    image: coal-incremental-v4:latest
+    container_name: coal-incremental
+    volumes:
+      # 数据目录挂载
+      - /path/to/background:/data/raw:ro # 原始数据（只读）
+      - /path/to/processed:/data/processed # 处理后数据
+      # 配置文件挂载
+      - ./config/config.yaml:/app/config/config.yaml:ro
+      # 日志目录
+      - ./logs:/data/logs
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+    # 示例：每天凌晨2点运行
+    # 实际使用时建议使用 cron 或 Kubernetes CronJob
+    command: --day $(date -d yesterday +%Y-%m-%d)
+    restart: unless-stopped
